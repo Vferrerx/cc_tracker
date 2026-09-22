@@ -75,6 +75,35 @@
   .search::placeholder{color:var(--muted);font-weight:600}
   .search:focus{box-shadow:0 0 0 3px rgba(231,178,60,.4)}
 
+  /* ---------- Season switch ---------- */
+  .season-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px}
+  .season-label{font-size:12px;font-weight:800;color:var(--muted)}
+  .season-switch{display:flex;gap:6px;flex-wrap:wrap}
+  .season-btn{border:2px solid var(--wood-dark);background:linear-gradient(180deg,#ecd39c,#dcb875);padding:7px 12px;border-radius:999px;cursor:pointer;font-weight:800;font-size:11.5px;color:var(--wood-dark)}
+  .season-btn.active{background:linear-gradient(180deg,#7fb551,#5a9645);color:#fff8e4;border-color:var(--green-dark)}
+  .now-badge{position:absolute;top:-11px;right:14px;background:linear-gradient(180deg,#ffe7a0,#f0c15c);border:2px solid var(--gold-dark);border-radius:999px;padding:3px 10px;font-size:10px;font-weight:900;color:var(--wood-dark);box-shadow:var(--shadow-sm);white-space:nowrap}
+  .bundle.current-season{box-shadow:0 0 0 3px var(--gold), var(--shadow)}
+
+  /* ---------- Season full-screen animation ---------- */
+  .season-fx{position:fixed;inset:0;pointer-events:none;z-index:55;overflow:hidden}
+  .fx-piece{position:absolute;top:-40px;line-height:1;will-change:transform,opacity;animation-fill-mode:forwards}
+  @keyframes fx-fall{
+    0%{transform:translateY(-10vh) translateX(0) rotate(0deg);opacity:1}
+    100%{transform:translateY(110vh) translateX(var(--drift,0px)) rotate(var(--spin,360deg));opacity:.85}
+  }
+  @keyframes fx-float{
+    0%{transform:translateY(8vh) translateX(0);opacity:0}
+    12%{opacity:1}
+    88%{opacity:1}
+    100%{transform:translateY(-108vh) translateX(var(--drift,0px));opacity:0}
+  }
+
+  /* ---------- Celebration ---------- */
+  .celebrate-toast{position:fixed;top:16px;left:50%;transform:translate(-50%,-160%);z-index:60;background:linear-gradient(180deg,#fff3d2,#f0dcac);border:3px solid var(--gold-dark);border-radius:14px;padding:12px 22px;font-family:'Pixelify Sans',sans-serif;font-weight:600;font-size:15px;color:var(--wood-dark);box-shadow:var(--shadow);transition:transform .45s cubic-bezier(.34,1.56,.64,1);pointer-events:none;text-align:center;max-width:88vw}
+  .celebrate-toast.show{transform:translate(-50%,0)}
+  .confetti-piece{position:fixed;top:-12px;width:8px;height:8px;border-radius:2px;z-index:59;pointer-events:none;animation:confetti-fall linear forwards}
+  @keyframes confetti-fall{to{transform:translateY(110vh) rotate(540deg);opacity:0}}
+
   /* ---------- Stats ---------- */
   .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:16px 0 6px}
   .stat{
@@ -108,7 +137,7 @@
   .bundle-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
   .bundle{
     background:linear-gradient(180deg,var(--parchment) 0%,var(--parchment2) 100%);
-    border:3px solid var(--wood);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);position:relative;overflow:hidden;
+    border:3px solid var(--wood);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);position:relative;overflow:visible;
   }
   .bundle:before{content:"";position:absolute;inset:5px;border:1px solid rgba(122,74,36,.35);border-radius:9px;pointer-events:none}
   .bundle.season-spring{border-color:var(--spring)}
@@ -161,6 +190,40 @@
 
   .footer{margin:30px 0 4px;color:var(--muted);font-size:11.5px;line-height:1.6;text-align:center;font-weight:600}
 
+  /* ---------- Info button + tip bubble ---------- */
+  .info-btn{
+    flex:0 0 auto;width:22px;height:22px;border-radius:50%;border:2px solid var(--wood-dark);
+    background:linear-gradient(180deg,#fff3d2,#ecca86);color:var(--wood-dark);font-weight:900;font-size:12px;
+    cursor:pointer;display:grid;place-items:center;line-height:1;box-shadow:0 2px 0 rgba(46,28,10,.3);
+  }
+  .info-btn:hover{filter:brightness(1.08)}
+  .info-btn:active{transform:translateY(1px)}
+  .req .info-btn{margin-left:2px}
+  .item-card .topline .info-btn{margin-left:auto}
+
+  .tip-overlay{position:fixed;inset:0;background:rgba(46,28,10,.28);z-index:40;display:none}
+  .tip-overlay.open{display:block}
+  .tip-bubble{
+    position:fixed;z-index:41;width:min(300px,86vw);
+    background:linear-gradient(180deg,var(--parchment),var(--parchment2));
+    border:3px solid var(--wood);border-radius:14px;padding:14px 16px 15px;
+    box-shadow:0 16px 34px rgba(30,18,8,.35);
+    display:none;
+  }
+  .tip-bubble.open{display:block}
+  .tip-bubble:before{content:"";position:absolute;inset:4px;border:1px solid rgba(122,74,36,.3);border-radius:9px;pointer-events:none}
+  .tip-close{position:absolute;top:7px;right:8px;width:22px;height:22px;border-radius:50%;border:2px solid var(--wood-dark);background:#f6cfc4;color:var(--wood-dark);font-weight:900;font-size:11px;cursor:pointer;display:grid;place-items:center}
+  .tip-head{display:flex;align-items:center;gap:10px;padding-right:20px}
+  .tip-head img{width:36px;height:36px;object-fit:contain;image-rendering:pixelated;background:radial-gradient(circle at 35% 30%,#fce7ab,#eec776);border:1px solid #d0a15a;border-radius:8px;padding:3px}
+  .tip-title{font-family:'Pixelify Sans',sans-serif;font-weight:600;font-size:16px;color:var(--wood-dark)}
+  .tip-body{margin-top:9px;font-size:12.5px;line-height:1.55;font-weight:700;color:var(--ink)}
+  .tip-uses{margin-top:9px;font-size:10.5px;line-height:1.5;color:var(--muted);font-weight:700;border-top:1px dashed #ba9159;padding-top:8px}
+  .tip-note{margin-top:10px;border-top:1px dashed #ba9159;padding-top:9px}
+  .tip-note label{font-size:10.5px;font-weight:800;color:var(--muted);display:block;margin-bottom:5px}
+  .tip-note textarea{width:100%;border:2px solid var(--wood-light);border-radius:9px;padding:7px 9px;font-family:inherit;font-size:12px;resize:vertical;background:var(--parchment2);color:var(--ink);min-height:44px}
+  .tip-note textarea:focus{outline:none;box-shadow:0 0 0 3px rgba(231,178,60,.35)}
+  .note-dot{width:8px;height:8px;border-radius:50%;background:var(--green-dark);display:inline-block;margin-left:4px;border:1px solid #fff;flex:0 0 auto}
+
   @media (max-width:1050px){.item-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
   @media (max-width:850px){.stats{grid-template-columns:repeat(2,1fr)}.bundle-grid{grid-template-columns:1fr}.item-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.signboard{padding:16px}}
   @media (max-width:560px){
@@ -188,6 +251,16 @@
       <label class="btn small" for="importInput">Importar</label><input id="importInput" type="file" accept="application/json" style="display:none" />
       <button class="btn small danger" id="resetBtn">Zerar</button>
     </div>
+    <div class="season-row">
+      <span class="season-label">🌾 Temporada atual da sua partida:</span>
+      <div class="season-switch" id="seasonSwitch">
+        <button type="button" class="season-btn" data-season="spring">🌸 Primavera</button>
+        <button type="button" class="season-btn" data-season="summer">☀️ Verão</button>
+        <button type="button" class="season-btn" data-season="fall">🍂 Outono</button>
+        <button type="button" class="season-btn" data-season="winter">❄️ Inverno</button>
+        <button type="button" class="season-btn" data-season="">Nenhuma</button>
+      </div>
+    </div>
     <section class="stats">
       <div class="stat"><div class="stat-label">Conjuntos completos</div><div class="stat-value" id="bundleStat">0/30</div><div class="progress"><i id="bundleBar"></i></div></div>
       <div class="stat"><div class="stat-label">Itens marcados</div><div class="stat-value" id="itemStat">0/0</div><div class="progress"><i id="itemBar"></i></div></div>
@@ -201,6 +274,22 @@
     <div class="view-note" id="viewNote"></div>
     <div id="content"></div>
   </main>
+
+  <div class="season-fx" id="seasonFx"></div>
+
+  <div class="tip-overlay" id="tipOverlay"></div>
+  <div class="tip-bubble" id="tipBubble" role="tooltip">
+    <button type="button" class="tip-close" id="tipClose" aria-label="Fechar dica">✕</button>
+    <div class="tip-head"><img id="tipIcon" alt=""><div class="tip-title" id="tipTitle"></div></div>
+    <div class="tip-body" id="tipBody"></div>
+    <div class="tip-uses" id="tipUses"></div>
+    <div class="tip-note">
+      <label for="tipNoteInput">📝 Sua nota</label>
+      <textarea id="tipNoteInput" rows="2" placeholder="Ex.: comprei semana passada, falta colher…"></textarea>
+    </div>
+  </div>
+
+  <div class="celebrate-toast" id="celebrateToast"><span id="celebrateText"></span></div>
 
   <footer class="footer">
     Nomes e requisitos baseados na lista de <b>Conjuntos</b> da Stardew Valley Wiki em português. O site usa ícones de itens hospedados pela Stardew Valley Wiki; por isso, os ícones precisam de internet para carregar. O checklist e as preferências ficam apenas no seu navegador.
@@ -399,15 +488,195 @@ const rooms = [
 ];
 function I(id,name,file,meta='1'){return {id,name,file,meta}};
 
-const state = {items:{}, gold:0, room:'all', pendingOnly:false, search:''};
+const TIPS = {
+  'raiz':'Forrageie no chão da fazenda ou da floresta no início da primavera.',
+  'narciso':'Forrageie na floresta e nos campos durante a primavera.',
+  'alho-poró':'Forrageie perto de riachos e na floresta na primavera.',
+  'dente':'Forrageie na grama da fazenda e da floresta na primavera.',
+  'uva':'Forrageie em videiras na floresta durante o verão.',
+  'baga-tempero':'Forrageie na floresta e na praia durante o verão.',
+  'ervilha':'Forrageie na floresta durante o verão.',
+  'cogumelo-comum':'Forrageie na floresta no outono (também aparece na Floresta Secreta).',
+  'ameixa':'Forrageie embaixo de árvores na floresta durante o outono.',
+  'avela':'Forrageie na floresta durante o outono.',
+  'amora':'Forrageie em arbustos na floresta durante o outono.',
+  'raiz-inverno':'Cave nos pontos de terra da floresta e da praia no inverno.',
+  'fruta-cristal':'Forrageie na floresta durante o inverno.',
+  'inhame-neve':'Cave nos pontos de terra da floresta no inverno.',
+  'acafrao':'Cave nos pontos de terra da fazenda e da floresta no inverno.',
+  'madeira':'Corte árvores com o machado.',
+  'pedra':'Quebre pedras com a picareta na fazenda ou nas minas.',
+  'madeira-lei':'Quebre tocos grandes (precisa do machado de cobre) ou compre na Loja de Ferragens.',
+  'coco':'Forrageie embaixo de palmeiras no Deserto de Calico.',
+  'cacto':'Colha de cactos no Deserto de Calico.',
+  'cenoura':'Cave os pontos de terra dentro das Minas.',
+  'cogumelo-vermelho':'Forrageie na floresta no outono ou na Floresta Secreta.',
+  'cogumelo-roxo':'Encontrado nos níveis mais profundos das Minas.',
+  'xarope-acer':'Instale um Coletor de Seiva em uma bordo (Maple Tree) e espere.',
+  'resina-carvalho':'Instale um Coletor de Seiva em um carvalho (Oak Tree) e espere.',
+  'alcatrao':'Instale um Coletor de Seiva em um pinheiro (Pine Tree) e espere.',
+  'morel':'Forrageie na floresta e na Floresta Secreta durante o outono.',
+  'chirivia':'Plante sementes de chirívia (loja do Pierre) na primavera e colha.',
+  'vagem':'Plante sementes de vagem (usa treliça) na primavera.',
+  'couve-flor':'Plante sementes de couve-flor na primavera.',
+  'batata':'Plante sementes de batata na primavera.',
+  'tomate':'Plante sementes de tomate no verão.',
+  'pimenta':'Plante sementes de pimenta picante no verão.',
+  'mirtilo':'Plante mudas de mirtilo no verão (colheita múltipla).',
+  'melao':'Plante sementes de melão no verão.',
+  'milho':'Plante sementes de milho no verão ou outono.',
+  'berinjela':'Plante sementes de berinjela no outono (colheita múltipla).',
+  'abobora':'Plante sementes de abóbora no outono.',
+  'inhame':'Plante sementes de inhame no outono.',
+  'chirivia-ouro':'Cultive chirívias com boa terra/fertilizante até sair qualidade ouro.',
+  'melao-ouro':'Cultive melões com boa terra/fertilizante até sair qualidade ouro.',
+  'abobora-ouro':'Cultive abóboras com boa terra/fertilizante até sair qualidade ouro.',
+  'milho-ouro':'Cultive milhos com boa terra/fertilizante até sair qualidade ouro.',
+  'leite-grande':'Vaca com amizade/felicidade alta produz Leite Grande no celeiro.',
+  'ovo-grande-marrom':'Galinha marrom com amizade/felicidade alta produz Ovo Grande.',
+  'ovo-grande':'Galinha branca com amizade/felicidade alta produz Ovo Grande.',
+  'leite-cabra':'Cabra com amizade/felicidade alta produz Leite Grande de Cabra.',
+  'la':'Tosquie uma ovelha com a Tesoura de Tosquiar.',
+  'ovo-pata':'Colete de um pato no galinheiro (precisa de água disponível).',
+  'oleo-trufas':'Processe uma Trufa na Prensa de Óleo.',
+  'tecido':'Processe Lã no Tear.',
+  'queijo-cabra':'Processe Leite de Cabra na Prensa de Queijo.',
+  'queijo':'Processe Leite de Vaca na Prensa de Queijo.',
+  'mel':'Instale uma Colmeia perto de flores.',
+  'geleia':'Processe uma fruta no Pote de Conservas.',
+  'maca':'Colha de uma macieira adulta (leva algumas estações para crescer).',
+  'damasco':'Colha de um damasqueiro adulto.',
+  'laranja':'Colha de uma laranjeira adulta.',
+  'pessego':'Colha de um pessegueiro adulto.',
+  'roma':'Colha de uma romãzeira adulta.',
+  'cereja':'Colha de uma cerejeira adulta.',
+  'peixe-sol':'Pesque no rio, das 6h às 19h, em dias sem chuva, na primavera ou no verão.',
+  'bagre':'Pesque no rio, das 6h à meia-noite, apenas em dias de chuva (ou em qualquer clima na Floresta Secreta), na primavera ou no outono.',
+  'alocine':'Pesque no rio, das 9h às 2h, apenas em dias de chuva, na primavera ou no outono.',
+  'salmao-hibrido':'Pesque no rio, das 6h às 19h, em qualquer clima, no outono ou inverno.',
+  'achiga':'Pesque em lagos (inclusive o tanque da fazenda), das 6h às 19h, em qualquer clima, o ano todo.',
+  'carpa':'Pesque em lagos e no rio da cidade, em qualquer horário e clima, o ano todo.',
+  'peixe-gato-cabecudo':'Pesque no Lago da Montanha, das 6h à meia-noite, em qualquer clima, o ano todo.',
+  'esturjao':'Pesque no Lago da Montanha (nível 5 de pesca), das 6h às 19h, em qualquer clima, no verão ou inverno.',
+  'sardinha':'Pesque no oceano, das 6h às 19h, em qualquer clima, na primavera, outono ou inverno.',
+  'atum':'Pesque no oceano, das 6h às 19h, em qualquer clima, no verão ou inverno.',
+  'cioba':'Pesque no oceano, das 6h às 19h, em qualquer clima, no verão ou outono.',
+  'tilapia':'Pesque no oceano ou no rio, das 6h às 19h, em qualquer clima, no verão ou outono.',
+  'picao-verde':'Pesque em rios e lagos, do meio-dia às 2h, no outono (ou no inverno em dias de chuva).',
+  'brema':'Pesque no rio à noite, das 18h às 2h, em qualquer clima, o ano todo.',
+  'enguia':'Pesque no rio ou oceano, das 16h às 2h, apenas em dias de chuva, na primavera ou outono.',
+  'lagosta':'Coloque um Covo na água do oceano; qualquer estação, sem horário fixo — confira uma vez por dia.',
+  'lagostim':'Coloque um Covo na água do rio; qualquer estação, sem horário fixo.',
+  'caranguejo':'Coloque um Covo na água do oceano; qualquer estação, sem horário fixo.',
+  'berbigao':'Coloque um Covo na água do oceano; qualquer estação, sem horário fixo.',
+  'mexilhao':'Coloque um Covo na água do oceano; qualquer estação, sem horário fixo.',
+  'camarao':'Coloque um Covo na água do oceano; só aparece no verão.',
+  'lesma':'Coloque um Covo na água do rio; qualquer estação, sem horário fixo.',
+  'caramujo':'Coloque um Covo na água do rio; qualquer estação, sem horário fixo.',
+  'ostra':'Coloque um Covo na água do oceano; qualquer estação, sem horário fixo.',
+  'concha':'Coloque um Covo na água do oceano; qualquer estação, sem horário fixo.',
+  'baiacu':'Pesque no oceano, das 12h às 16h, apenas em dias ensolarados, no verão.',
+  'peixe-fantasma':'Pesque no lago subterrâneo das Minas (a partir do andar 20), em qualquer horário.',
+  'areinha':'Pesque no Deserto de Calico, durante o dia, em qualquer estação.',
+  'madeirao':'Pesque na lagoa da Floresta Secreta, em qualquer horário, primavera a outono.',
+  'barra-cobre':'Funda Minério de Cobre na Fornalha.',
+  'barra-ferro':'Funda Minério de Ferro na Fornalha.',
+  'barra-ouro':'Funda Minério de Ouro na Fornalha.',
+  'quartzo':'Minere nas Minas ou colete na superfície de manhã.',
+  'cristal-terra':'Minere pedras nas Minas.',
+  'lagrima':'Minere nas Minas, mais comum nos níveis frios/profundos.',
+  'quartzo-fogo':'Minere nos níveis mais profundos das Minas.',
+  'gosma':'Derrote gosmas nas Minas ou colete no Barril de Gosma.',
+  'asa-morcego':'Derrote morcegos nas Minas.',
+  'essencia-solar':'Item raro largado por monstros do tipo serpente no deserto/Caverna do Crânio.',
+  'essencia-nula':'Item raro largado por criaturas sombrias nas Minas.',
+  'broto-samambaia':'Forrageie na Floresta Secreta durante o verão.',
+  'trufa':'Solte um porco para fora do celeiro (não aparece no inverno sem aquecedor); ele encontra trufas no chão.',
+  'papoula':'Forrageie ou plante sementes de papoula no verão.',
+  'hossomaki':'Prepare na cozinha com Peixe + Arroz + Alga (receita da TV/Culinária).',
+  'ovo-frito':'Prepare na cozinha usando um Ovo.',
+  'ourico':'Pesque no oceano durante o verão.',
+  'girassol':'Plante sementes de girassol no verão/outono ou forrageie.',
+  'pena-pato':'Pato com amizade/felicidade alta produz Pena de Pato.',
+  'agua-marinha':'Minere gemas nas Minas.',
+  'repolho-roxo':'Plante sementes de repolho roxo no outono.',
+  'nautilo':'Forrageie na praia durante o inverno.',
+  'esqualio':'Pesque no Lago da Montanha ou no rio da floresta, das 6h às 19h, de preferência em dias de chuva, o ano todo.',
+  'geodo-congelado':'Encontrado minerando nas Minas ou cavando nós de neve na fazenda durante o inverno.',
+  'trigo':'Plante sementes de trigo no verão.',
+  'palha':'Colha trigo com a foice (chance) ou produza no Silo.',
+  'vinho':'Processe uma fruta no Barril (Keg).',
+  'pe-coelho':'Coelho com felicidade alta na coelheira produz Pé de Coelho (item raro).'
+};
+
+const state = {items:{}, gold:0, room:'all', pendingOnly:false, search:'', notes:{}, season:''};
 const KEY='stardew-cc-checklist-v1';
 let saved=localStorage.getItem(KEY); if(saved){try{Object.assign(state,JSON.parse(saved));}catch(e){}}
+state.notes = state.notes || {};
 const allBundles=rooms.flatMap(r=>r.bundles.map(b=>({...b,roomId:r.id,roomName:r.name})));
 const itemMap=new Map();
 for(const b of allBundles){for(const x of (b.items||[])){ if(!itemMap.has(x.id)) itemMap.set(x.id,{...x,uses:[]}); itemMap.get(x.id).uses.push({room:b.roomName,bundle:b.title,meta:x.meta}); }}
 const items=[...itemMap.values()].sort((a,b)=>a.name.localeCompare(b.name,'pt-BR'));
 
-function save(){localStorage.setItem(KEY,JSON.stringify({items:state.items,gold:Number(state.gold)||0,room:state.room,pendingOnly:state.pendingOnly,search:state.search}));}
+function save(){localStorage.setItem(KEY,JSON.stringify({items:state.items,gold:Number(state.gold)||0,room:state.room,pendingOnly:state.pendingOnly,search:state.search,notes:state.notes||{},season:state.season||''}));}
+function snapshotCompletion(){
+  return {
+    bundles: new Set(allBundles.filter(isComplete).map(b=>b.id)),
+    rooms: new Set(rooms.filter(r=>r.bundles.every(isComplete)).map(r=>r.id))
+  };
+}
+function celebrateDiff(before){
+  const after=snapshotCompletion();
+  const newRooms=rooms.filter(r=>after.rooms.has(r.id) && !before.rooms.has(r.id));
+  if(newRooms.length){ newRooms.forEach(r=>celebrate(`🏆 Sala concluída: ${r.name}!`)); return; }
+  const newBundles=allBundles.filter(b=>after.bundles.has(b.id) && !before.bundles.has(b.id));
+  newBundles.forEach(b=>celebrate(`✅ Conjunto completo: ${b.title}!`));
+}
+function celebrate(text){
+  const toast=document.getElementById('celebrateToast');
+  document.getElementById('celebrateText').textContent=text;
+  toast.classList.add('show');
+  clearTimeout(toast._t); toast._t=setTimeout(()=>toast.classList.remove('show'),3200);
+  spawnConfetti();
+}
+function spawnConfetti(){
+  const colors=['#e7b23c','#7fb551','#c9793c','#5fa8c9','#c15b46'];
+  for(let i=0;i<22;i++){
+    const p=document.createElement('div'); p.className='confetti-piece';
+    p.style.left=Math.random()*100+'vw';
+    p.style.background=colors[Math.floor(Math.random()*colors.length)];
+    p.style.animationDuration=(1.8+Math.random()*1.2)+'s';
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),3200);
+  }
+}
+const SEASON_FX = {
+  spring:{emojis:['🌸','🌷','🍃','🌼'], anim:'fx-fall', count:42, duration:[3.6,5.2], size:[14,22]},
+  summer:{emojis:['✨','🌼','🦋','☀️'], anim:'fx-float', count:30, duration:[3,4.6], size:[12,20]},
+  fall:{emojis:['🍁','🍂','🍃'], anim:'fx-fall', count:44, duration:[3.6,5.6], size:[16,24]},
+  winter:{emojis:['❄️','❅','❆'], anim:'fx-fall', count:56, duration:[3,4.6], size:[10,18]}
+};
+function playSeasonFx(season){
+  const cfg=SEASON_FX[season]; if(!cfg) return;
+  const container=document.getElementById('seasonFx'); if(!container) return;
+  const {emojis,anim,count,duration,size}=cfg;
+  for(let i=0;i<count;i++){
+    const el=document.createElement('span'); el.className='fx-piece';
+    el.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    const dur=duration[0]+Math.random()*(duration[1]-duration[0]);
+    const sz=size[0]+Math.random()*(size[1]-size[0]);
+    const drift=Math.round(Math.random()*160-80)+'px';
+    const spin=Math.round(Math.random()*360)+'deg';
+    const delay=Math.random()*0.6;
+    el.style.left=(Math.random()*100)+'vw';
+    el.style.fontSize=sz+'px';
+    el.style.setProperty('--drift',drift);
+    el.style.setProperty('--spin',spin);
+    el.style.animation=`${anim} ${dur}s ${delay}s linear forwards`;
+    container.appendChild(el);
+    setTimeout(()=>el.remove(),(dur+delay+0.3)*1000);
+  }
+}
 function isChecked(x){return !!state.items[x.id]}
 function qualifiedItems(b){return (b.items||[]).filter(isChecked).length}
 function isComplete(b){
@@ -426,9 +695,10 @@ function renderRooms(){
   el.innerHTML=[{id:'all',name:'Todas as salas'},...rooms].map(r=>`<button class="room-btn ${state.room===r.id?'active':''}" data-room="${r.id}">${r.name}</button>`).join('');
   el.querySelectorAll('[data-room]').forEach(b=>b.onclick=()=>{state.room=b.dataset.room;save();render();});
 }
-function reqHTML(x,b){const checked=isChecked(x); const meta=(x.meta&&x.meta!=='1')?x.meta:''; return `<label class="req ${checked?'checked':''}" data-item="${x.id}">
+function reqHTML(x,b){const checked=isChecked(x); const meta=(x.meta&&x.meta!=='1')?x.meta:''; const hasNote=!!(state.notes&&state.notes[x.id]); return `<label class="req ${checked?'checked':''}" data-item="${x.id}">
   ${iconHTML(x.file, x.name)}
   <div class="req-info"><div class="req-name">${x.name}</div><div class="req-meta">${meta||'1 item'}${b.mode==='choice'?'<span class="choice">opção</span>':''}</div></div>
+  <button type="button" class="info-btn" data-tip-item="${x.id}" aria-label="Dica sobre ${x.name}">i</button>${hasNote?'<span class="note-dot" title="Tem nota"></span>':''}
   <span class="checkmark">${checked?'✓':''}</span><input type="checkbox" ${checked?'checked':''} aria-label="Tenho ${x.name}">
  </label>`}
 function bundleHTML(b){
@@ -439,18 +709,30 @@ function bundleHTML(b){
   if(b.mode==='money') body=`<div class="money-line">${Number(state.gold||0)>=b.amount?'✅ Valor já atingido':'💰 Ainda faltam '+Math.max(0,b.amount-Number(state.gold||0)).toLocaleString('pt-BR')+' ouros'}</div>`;
   else body=`<div class="bundle-progress"><div class="progress"><i style="width:${Math.min(100,(b.mode==='choice'?qualifiedItems(b):b.items.filter(isChecked).length)/(b.mode==='choice'?b.need:b.items.length)*100)}%"></i></div></div><div class="req-grid">${b.items.map(x=>reqHTML(x,b)).join('')}</div>`;
   const seasonClass=b.season?` season-${b.season}`:'';
-  return `<article class="bundle${seasonClass}"><div class="bundle-head"><div><div class="bundle-title">${b.title}</div><div class="bundle-rule">${b.mode==='choice'?`Escolha ${b.need} entre ${b.items.length}`:b.mode==='money'?'Pagamento em ouro':'Todos os itens do conjunto'}</div></div><span class="badge ${complete?'done':''}">${complete?'✓ Completo':bundleProgressText(b)}</span></div>${body}</article>`;
+  const isNow=b.season && state.season && b.season===state.season;
+  return `<article class="bundle${seasonClass}${isNow?' current-season':''}">${isNow?'<span class="now-badge">🌟 Temporada atual</span>':''}<div class="bundle-head"><div><div class="bundle-title">${b.title}</div><div class="bundle-rule">${b.mode==='choice'?`Escolha ${b.need} entre ${b.items.length}`:b.mode==='money'?'Pagamento em ouro':'Todos os itens do conjunto'}</div></div><span class="badge ${complete?'done':''}">${complete?'✓ Completo':bundleProgressText(b)}</span></div>${body}</article>`;
 }
 function renderAllItems(){
   const q=state.search.trim();
   const filtered=items.filter(x=>matches(x.name,q));
   return `<section class="all-items"><div class="items-head"><div class="items-title">Todos os itens</div><div class="legend">Clique no cartão para marcar/desmarcar. A lista é única, mesmo quando um item aparece em mais de um conjunto.</div></div><div class="item-grid">${filtered.map(x=>{
-    const c=isChecked(x); const uses=x.uses.map(u=>`${u.bundle}${u.meta&&u.meta!=='1'?' · '+u.meta:''}`).join(' • ');
-    return `<div class="item-card ${c?'checked':''}" data-item="${x.id}"><div class="topline">${iconHTML(x.file, x.name)}<div class="name">${x.name}</div></div><div class="uses">${uses}</div><div class="tick"><span class="dot">${c?'✓':''}</span>${c?'Já possuo':'Marcar como possuído'}</div></div>`;
+    const c=isChecked(x); const hasNote=!!(state.notes&&state.notes[x.id]); const uses=x.uses.map(u=>`${u.bundle}${u.meta&&u.meta!=='1'?' · '+u.meta:''}`).join(' • ');
+    return `<div class="item-card ${c?'checked':''}" data-item="${x.id}"><div class="topline">${iconHTML(x.file, x.name)}<div class="name">${x.name}</div>${hasNote?'<span class="note-dot" title="Tem nota"></span>':''}<button type="button" class="info-btn" data-tip-item="${x.id}" aria-label="Dica sobre ${x.name}">i</button></div><div class="uses">${uses}</div><div class="tick"><span class="dot">${c?'✓':''}</span>${c?'Já possuo':'Marcar como possuído'}</div></div>`;
   }).join('')}</div></section>`;
+}
+function renderSeasonSwitch(){
+  document.querySelectorAll('#seasonSwitch .season-btn').forEach(btn=>{
+    btn.classList.toggle('active', (btn.dataset.season||'')===(state.season||''));
+    btn.onclick=()=>{
+      const next=btn.dataset.season||'';
+      if(next!==state.season && next){ playSeasonFx(next); }
+      state.season=next; save(); render();
+    };
+  });
 }
 function render(){
   document.getElementById('goldInput').value=state.gold||''; document.getElementById('search').value=state.search||''; document.getElementById('onlyPending').textContent=state.pendingOnly?'Mostrar tudo':'Mostrar pendentes';
+  renderSeasonSwitch();
   renderRooms();
   const visibleRooms=state.room==='all'?rooms:rooms.filter(r=>r.id===state.room);
   let html=''; let bundleCount=0; let roomCount=0;
@@ -468,15 +750,51 @@ function render(){
   bindClicks();
 }
 function bindClicks(){
-  document.querySelectorAll('[data-item]').forEach(el=>el.onclick=(ev)=>{if(ev.target.tagName==='INPUT')return; const id=el.dataset.item; state.items[id]=!state.items[id]; save(); render();});
+  document.querySelectorAll('[data-item]').forEach(el=>el.onclick=(ev)=>{
+    if(ev.target.tagName==='INPUT'||ev.target.closest('.info-btn'))return;
+    const id=el.dataset.item;
+    const before=snapshotCompletion();
+    state.items[id]=!state.items[id]; save();
+    render();
+    celebrateDiff(before);
+  });
+  document.querySelectorAll('[data-tip-item]').forEach(btn=>btn.onclick=(ev)=>{ev.stopPropagation();ev.preventDefault();openTip(btn.dataset.tipItem,btn);});
 }
+function openTip(id,btn){
+  const x=itemMap.get(id); if(!x) return;
+  const tip=TIPS[id]||'Consulte a Stardew Valley Wiki para saber onde encontrar este item.';
+  document.getElementById('tipIcon').src=icon(x.file); document.getElementById('tipIcon').alt=x.name;
+  document.getElementById('tipTitle').textContent=x.name;
+  document.getElementById('tipBody').textContent=tip;
+  const uses=x.uses.map(u=>`${u.bundle} (${u.room})${u.meta&&u.meta!=='1'?' · '+u.meta:''}`).join(' • ');
+  document.getElementById('tipUses').textContent='Usado em: '+uses;
+  const noteInput=document.getElementById('tipNoteInput');
+  noteInput.value=(state.notes&&state.notes[id])||'';
+  noteInput.oninput=(e)=>{state.notes=state.notes||{}; state.notes[id]=e.target.value; save();};
+  const bubble=document.getElementById('tipBubble'); const overlay=document.getElementById('tipOverlay');
+  overlay.classList.add('open'); bubble.classList.add('open');
+  const r=btn.getBoundingClientRect(); const bw=bubble.offsetWidth||300; const bh=bubble.offsetHeight||140;
+  let left=r.left+r.width/2-bw/2; let top=r.bottom+10;
+  left=Math.max(10,Math.min(left,window.innerWidth-bw-10));
+  if(top+bh>window.innerHeight-10) top=Math.max(10,r.top-bh-10);
+  bubble.style.left=left+'px'; bubble.style.top=top+'px';
+}
+function closeTip(){document.getElementById('tipBubble').classList.remove('open');document.getElementById('tipOverlay').classList.remove('open');render();}
+document.getElementById('tipClose').onclick=closeTip;
+document.getElementById('tipOverlay').onclick=closeTip;
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeTip();});
 
 document.getElementById('search').addEventListener('input',e=>{state.search=e.target.value;save();render();});
-document.getElementById('goldInput').addEventListener('input',e=>{state.gold=Math.max(0,Number(e.target.value)||0);save();render();});
+document.getElementById('goldInput').addEventListener('input',e=>{
+  const before=snapshotCompletion();
+  state.gold=Math.max(0,Number(e.target.value)||0);save();
+  render();
+  celebrateDiff(before);
+});
 document.getElementById('onlyPending').onclick=()=>{state.pendingOnly=!state.pendingOnly;save();render();};
 document.getElementById('resetBtn').onclick=()=>{if(confirm('Zerar todo o progresso salvo neste navegador?')){state.items={};state.gold=0;save();render();}};
-document.getElementById('exportBtn').onclick=()=>{const data=JSON.stringify({version:1,exportedAt:new Date().toISOString(),items:state.items,gold:state.gold},null,2); const blob=new Blob([data],{type:'application/json'}); const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='centro-comunitario-progresso.json';a.click();URL.revokeObjectURL(a.href);};
-document.getElementById('importInput').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);state.items=d.items||{};state.gold=Number(d.gold)||0;save();render();alert('Progresso importado.');}catch(err){alert('Arquivo inválido.');}};r.readAsText(f);e.target.value='';});
+document.getElementById('exportBtn').onclick=()=>{const data=JSON.stringify({version:1,exportedAt:new Date().toISOString(),items:state.items,gold:state.gold,notes:state.notes,season:state.season},null,2); const blob=new Blob([data],{type:'application/json'}); const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='centro-comunitario-progresso.json';a.click();URL.revokeObjectURL(a.href);};
+document.getElementById('importInput').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);state.items=d.items||{};state.gold=Number(d.gold)||0;state.notes=d.notes||{};state.season=d.season||'';save();render();alert('Progresso importado.');}catch(err){alert('Arquivo inválido.');}};r.readAsText(f);e.target.value='';});
 render();
 </script>
 </body>
