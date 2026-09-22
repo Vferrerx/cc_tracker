@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#4a7c3c" />
+<title>Centro Comunitário — Checklist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;600;700&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-a:#f6e6b8; --bg-b:#ecd497;
+    --parchment:#fbf0d3; --parchment2:#f4e3ba;
+    --wood:#7a4a24; --wood-dark:#4e2d15; --wood-light:#c98a45;
+    --ink:#3d2814; --muted:#7c6042;
+    --gold:#e7b23c; --gold-dark:#b8811f;
+    --green:#4f9a4f; --green-dark:#356b34;
+    --red:#c15b46; --blue:#4d86bb; --purple:#9268ad;
+    --spring:#7fb551; --summer:#eab23c; --fall:#c9793c; --winter:#5fa8c9;
+    --shadow:0 10px 24px rgba(46,28,10,.22);
+    --shadow-sm:0 3px 0 rgba(46,28,10,.35);
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;color:var(--ink);
+    font-family:'Nunito',ui-sans-serif,system-ui,sans-serif;
+    background:
+      radial-gradient(ellipse 900px 500px at 12% -10%, rgba(255,255,255,.5), transparent 55%),
+      radial-gradient(ellipse 700px 500px at 100% 0%, rgba(127,181,81,.18), transparent 55%),
+      repeating-linear-gradient(135deg, rgba(122,74,36,.05) 0 3px, transparent 3px 26px),
+      linear-gradient(180deg, var(--bg-a), var(--bg-b));
+    min-height:100vh;
+  }
+  ::selection{background:var(--gold);color:var(--wood-dark)}
+
+  .app{max-width:1360px;margin:0 auto;padding:20px 22px 56px}
+
+  /* ---------- Header / hero ---------- */
+  .top{padding:16px 0 10px}
+  .signboard{
+    background:linear-gradient(180deg,#9a6636,#7a4a24 60%,#6b3f1f);
+    border:3px solid var(--wood-dark);
+    border-radius:16px;
+    padding:18px 22px;
+    box-shadow:var(--shadow), inset 0 0 0 3px rgba(255,224,158,.15);
+    display:flex;gap:18px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;
+    position:relative;
+  }
+  .signboard:before{content:"";position:absolute;inset:7px;border:1px solid rgba(255,224,158,.28);border-radius:10px;pointer-events:none}
+  .signboard .corner{position:absolute;width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f4d99b,#8c5b28 70%);box-shadow:inset 0 0 0 1px rgba(0,0,0,.35)}
+  .signboard .corner.tl{top:8px;left:8px}.signboard .corner.tr{top:8px;right:8px}.signboard .corner.bl{bottom:8px;left:8px}.signboard .corner.br{bottom:8px;right:8px}
+  .title{
+    font-family:'Pixelify Sans',ui-sans-serif,sans-serif;
+    font-size:clamp(26px,4vw,42px);font-weight:700;letter-spacing:.5px;margin:0;
+    color:#fff3da;text-shadow:0 3px 0 rgba(0,0,0,.35);
+  }
+  .subtitle{margin:8px 0 0;color:#f1dfb9;font-size:13.5px;max-width:640px;line-height:1.55;font-weight:600}
+  .gold-box{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:rgba(0,0,0,.18);padding:9px 12px;border-radius:12px;border:2px solid rgba(255,224,158,.3)}
+  .gold-box span{font-weight:800;color:#ffe6a8;font-size:13px;white-space:nowrap}
+  .gold-input{width:130px;border:2px solid var(--wood-dark);border-radius:9px;padding:8px 10px;background:#fff7e1;color:var(--ink);font-weight:800}
+  .gold-input:focus{outline:none;box-shadow:0 0 0 3px rgba(231,178,60,.5)}
+
+  .toolbar{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:14px}
+  button,input{font:inherit}
+  .btn{border:2px solid var(--wood-dark);background:linear-gradient(180deg,#fff3d2,#f0dcac);color:var(--ink);padding:10px 14px;border-radius:11px;cursor:pointer;box-shadow:var(--shadow-sm);font-weight:800;font-size:13px;transition:transform .08s}
+  .btn:hover{filter:brightness(1.04)}
+  .btn:active{transform:translateY(3px);box-shadow:0 0 0 rgba(46,28,10,.35)}
+  .btn.primary{background:linear-gradient(180deg,#ffe7a0,#f0c15c);border-color:var(--gold-dark)}
+  .btn.danger{background:linear-gradient(180deg,#f6cfc4,#e6a794);border-color:#8a3f2c}
+  .btn.small{padding:8px 11px;font-size:12px}
+  .search{flex:1;min-width:220px;border:2px solid var(--wood-dark);padding:10px 13px;border-radius:11px;background:#fffaea;outline:none;font-weight:700;color:var(--ink)}
+  .search::placeholder{color:var(--muted);font-weight:600}
+  .search:focus{box-shadow:0 0 0 3px rgba(231,178,60,.4)}
+
+  /* ---------- Stats ---------- */
+  .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:16px 0 6px}
+  .stat{
+    background:linear-gradient(180deg,var(--parchment),var(--parchment2));
+    border:2px solid var(--wood-light);border-radius:var(--radius);padding:13px 15px;box-shadow:var(--shadow);
+    position:relative;overflow:hidden;
+  }
+  .stat:before{content:"";position:absolute;inset:4px;border:1px solid rgba(122,74,36,.25);border-radius:9px;pointer-events:none}
+  .stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;font-weight:800}
+  .stat-value{font-family:'Pixelify Sans',sans-serif;font-size:25px;font-weight:600;margin-top:3px;color:var(--wood-dark)}
+  .progress{height:10px;background:#d9c193;border-radius:20px;overflow:hidden;margin-top:9px;border:1px solid #a97c46;box-shadow:inset 0 2px 3px rgba(0,0,0,.15)}
+  .progress>i{display:block;height:100%;background:linear-gradient(90deg,#5fa84f,#a9d15f);width:0%;transition:width .35s ease}
+
+  /* ---------- Room nav ---------- */
+  .rooms{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 6px}
+  .room-btn{
+    border:2px solid var(--wood-dark);background:linear-gradient(180deg,#ecd39c,#dcb875);
+    padding:9px 15px;border-radius:999px;cursor:pointer;font-weight:800;font-size:13px;color:var(--wood-dark);
+    box-shadow:var(--shadow-sm);
+  }
+  .room-btn.active{background:linear-gradient(180deg,#7fb551,#5a9645);color:#fff8e4;text-shadow:0 1px 0 rgba(0,0,0,.25);border-color:var(--green-dark)}
+  .view-note{font-size:12.5px;color:var(--muted);margin:6px 2px 18px;font-weight:700}
+
+  /* ---------- Room section ---------- */
+  .room-section{margin-bottom:8px}
+  .room-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin:22px 0 14px;flex-wrap:wrap;border-bottom:3px solid var(--wood-light);padding-bottom:8px}
+  .room-heading .name{font-family:'Pixelify Sans',sans-serif;font-weight:600;font-size:clamp(22px,3vw,30px);color:var(--wood-dark)}
+  .room-heading .reward{font-size:12.5px;color:var(--muted);margin-top:3px;font-weight:700}
+
+  /* ---------- Bundles ---------- */
+  .bundle-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  .bundle{
+    background:linear-gradient(180deg,var(--parchment) 0%,var(--parchment2) 100%);
+    border:3px solid var(--wood);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);position:relative;overflow:hidden;
+  }
+  .bundle:before{content:"";position:absolute;inset:5px;border:1px solid rgba(122,74,36,.35);border-radius:9px;pointer-events:none}
+  .bundle.season-spring{border-color:var(--spring)}
+  .bundle.season-summer{border-color:var(--summer)}
+  .bundle.season-fall{border-color:var(--fall)}
+  .bundle.season-winter{border-color:var(--winter)}
+  .bundle-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;position:relative}
+  .bundle-title{font-family:'Pixelify Sans',sans-serif;font-size:19px;font-weight:600;color:var(--wood-dark)}
+  .bundle-rule{font-size:12px;color:var(--muted);margin-top:4px;font-weight:700}
+  .badge{white-space:nowrap;border-radius:999px;padding:6px 10px;font-size:11px;font-weight:800;border:2px solid var(--wood-light);background:#f8e5ad;color:var(--wood-dark)}
+  .badge.done{background:linear-gradient(180deg,#bfe4ae,#9bd18a);border-color:var(--green-dark);color:var(--green-dark)}
+  .bundle-progress{margin:12px 0}
+  .req-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;position:relative}
+  .req{
+    display:flex;align-items:center;gap:10px;min-width:0;
+    background:rgba(255,250,232,.85);border:2px solid #c69555;border-radius:12px;padding:8px;cursor:pointer;
+    transition:.12s transform,.12s background,.12s border-color,.12s box-shadow;
+  }
+  .req:hover{transform:translateY(-1px);border-color:#9a642e;box-shadow:0 4px 8px rgba(46,28,10,.14)}
+  .req.checked{background:linear-gradient(180deg,#e3f2d3,#d3e8bb);border-color:var(--green-dark)}
+  .req.dim{opacity:.6}
+  .req img{width:44px;height:44px;image-rendering:pixelated;object-fit:contain;flex:0 0 44px;background:radial-gradient(circle at 35% 30%,#fce7ab,#eec776);border-radius:9px;border:1px solid #d3a45c;padding:4px;box-shadow:inset 0 1px 2px rgba(255,255,255,.6)}
+  .req-info{min-width:0}.req-name{font-weight:800;font-size:12.5px;line-height:1.3}
+  .req-meta{font-size:10.5px;color:var(--muted);margin-top:3px;line-height:1.35;font-weight:700}.req input{display:none}
+  .checkmark{margin-left:auto;flex:0 0 auto;width:24px;height:24px;border:2px solid var(--wood-dark);border-radius:7px;background:#fff5dd;display:grid;place-items:center;font-weight:900;color:var(--green-dark)}
+  .req.checked .checkmark{background:linear-gradient(180deg,#8fce6f,#5fa84f);color:white;border-color:var(--green-dark)}
+  .choice{display:inline-block;margin-left:5px;font-size:9.5px;color:#7a532c;font-weight:800;text-transform:uppercase;letter-spacing:.3px}
+  .empty{padding:34px;text-align:center;color:var(--muted);background:rgba(255,248,225,.7);border:2px dashed #ba9159;border-radius:var(--radius);font-weight:700}
+  .money-line{padding:14px 2px 4px;font-weight:800;font-size:14px}
+
+  /* ---------- All items ---------- */
+  .all-items{margin-top:26px}
+  .items-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin:0 0 14px;border-bottom:3px solid var(--wood-light);padding-bottom:8px}
+  .items-title{font-family:'Pixelify Sans',sans-serif;font-size:24px;font-weight:600;color:var(--wood-dark)}
+  .legend{font-size:12px;color:var(--muted);font-weight:700;max-width:420px;text-align:right}
+  .item-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:11px}
+  .item-card{
+    background:linear-gradient(180deg,#fffaec,#f2e2ba);border:2px solid #b27a43;border-radius:12px;padding:11px;cursor:pointer;min-height:120px;
+    box-shadow:0 5px 12px rgba(46,28,10,.14);transition:.12s transform;
+  }
+  .item-card:hover{transform:translateY(-2px)}
+  .item-card.checked{background:linear-gradient(180deg,#e3f2d3,#d3e8bb);border-color:var(--green-dark)}
+  .item-card .topline{display:flex;align-items:center;gap:9px}
+  .item-card img{width:38px;height:38px;object-fit:contain;image-rendering:pixelated;background:radial-gradient(circle at 35% 30%,#fce7ab,#eec776);border:1px solid #d0a15a;border-radius:8px;padding:2px}
+  .item-card .name{font-weight:800;font-size:12px;line-height:1.3}
+  .item-card .uses{font-size:9.5px;color:var(--muted);margin-top:8px;line-height:1.4;font-weight:600}
+  .item-card .tick{margin-top:9px;font-size:10px;font-weight:800;display:flex;align-items:center}
+  .item-card .dot{display:inline-grid;place-items:center;width:18px;height:18px;border:2px solid var(--wood-dark);border-radius:5px;margin-right:6px;background:#fff5dd}
+  .item-card.checked .dot{background:linear-gradient(180deg,#8fce6f,#5fa84f);color:#fff}
+
+  .footer{margin:30px 0 4px;color:var(--muted);font-size:11.5px;line-height:1.6;text-align:center;font-weight:600}
+
+  @media (max-width:1050px){.item-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+  @media (max-width:850px){.stats{grid-template-columns:repeat(2,1fr)}.bundle-grid{grid-template-columns:1fr}.item-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.signboard{padding:16px}}
+  @media (max-width:560px){
+    .app{padding:14px}.stats{grid-template-columns:1fr 1fr}.req-grid{grid-template-columns:1fr}
+    .item-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.bundle{padding:12px}
+    .req img{width:40px;height:40px;flex-basis:40px}.legend{text-align:left}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="signboard">
+      <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+      <div>
+        <h1 class="title">🌿 Centro Comunitário</h1>
+        <p class="subtitle">Checklist de todos os requisitos do <b>Centro Comunitário padrão</b> de Stardew Valley. Clique nos itens para marcar o que você já possui — o progresso fica salvo automaticamente neste navegador.</p>
+      </div>
+      <div class="gold-box"><span>💰 Ouro disponível:</span><input id="goldInput" class="gold-input" type="number" min="0" step="500" placeholder="0" /></div>
+    </div>
+    <div class="toolbar">
+      <input id="search" class="search" type="search" placeholder="Pesquisar item ou conjunto…" />
+      <button class="btn small" id="onlyPending">Mostrar pendentes</button>
+      <button class="btn small primary" id="exportBtn">Exportar progresso</button>
+      <label class="btn small" for="importInput">Importar</label><input id="importInput" type="file" accept="application/json" style="display:none" />
+      <button class="btn small danger" id="resetBtn">Zerar</button>
+    </div>
+    <section class="stats">
+      <div class="stat"><div class="stat-label">Conjuntos completos</div><div class="stat-value" id="bundleStat">0/30</div><div class="progress"><i id="bundleBar"></i></div></div>
+      <div class="stat"><div class="stat-label">Itens marcados</div><div class="stat-value" id="itemStat">0/0</div><div class="progress"><i id="itemBar"></i></div></div>
+      <div class="stat"><div class="stat-label">Salas concluídas</div><div class="stat-value" id="roomStat">0/6</div><div class="progress"><i id="roomBar"></i></div></div>
+      <div class="stat"><div class="stat-label">Modo</div><div class="stat-value" style="font-size:16px">Padrão</div><div style="font-size:10px;color:var(--muted);margin-top:5px;font-weight:700">Conjuntos não aleatorizados</div></div>
+    </section>
+    <nav class="rooms" id="rooms"></nav>
+  </header>
+
+  <main>
+    <div class="view-note" id="viewNote"></div>
+    <div id="content"></div>
+  </main>
+
+  <footer class="footer">
+    Nomes e requisitos baseados na lista de <b>Conjuntos</b> da Stardew Valley Wiki em português. O site usa ícones de itens hospedados pela Stardew Valley Wiki; por isso, os ícones precisam de internet para carregar. O checklist e as preferências ficam apenas no seu navegador.
+  </footer>
+</div>
+<script>
+const WIKI = 'https://stardewvalleywiki.com/mediawiki/images/';
+const ICON_MAP = {
+  "Apple.png": "https://stardewvalleywiki.com/mediawiki/images/7/7d/Apple.png",
+  "Apricot.png": "https://stardewvalleywiki.com/mediawiki/images/f/fc/Apricot.png",
+  "Aquamarine.png": "https://stardewvalleywiki.com/mediawiki/images/a/a2/Aquamarine.png",
+  "Bat Wing.png": "https://stardewvalleywiki.com/mediawiki/images/3/35/Bat_Wing.png",
+  "Blackberry.png": "https://stardewvalleywiki.com/mediawiki/images/2/25/Blackberry.png",
+  "Blueberry.png": "https://stardewvalleywiki.com/mediawiki/images/9/9e/Blueberry.png",
+  "Bream.png": "https://stardewvalleywiki.com/mediawiki/images/8/82/Bream.png",
+  "Bullhead.png": "https://stardewvalleywiki.com/mediawiki/images/d/db/Bullhead.png",
+  "Cactus Fruit.png": "https://stardewvalleywiki.com/mediawiki/images/3/32/Cactus_Fruit.png",
+  "Carp.png": "https://stardewvalleywiki.com/mediawiki/images/a/a8/Carp.png",
+  "Catfish.png": "https://stardewvalleywiki.com/mediawiki/images/9/99/Catfish.png",
+  "Cauliflower.png": "https://stardewvalleywiki.com/mediawiki/images/a/aa/Cauliflower.png",
+  "Cave Carrot.png": "https://stardewvalleywiki.com/mediawiki/images/3/34/Cave_Carrot.png",
+  "Cheese.png": "https://stardewvalleywiki.com/mediawiki/images/a/a5/Cheese.png",
+  "Cherry.png": "https://stardewvalleywiki.com/mediawiki/images/2/20/Cherry.png",
+  "Chub.png": "https://stardewvalleywiki.com/mediawiki/images/b/bd/Chub.png",
+  "Clam.png": "https://stardewvalleywiki.com/mediawiki/images/e/ed/Clam.png",
+  "Cloth.png": "https://stardewvalleywiki.com/mediawiki/images/5/51/Cloth.png",
+  "Cockle.png": "https://stardewvalleywiki.com/mediawiki/images/a/ad/Cockle.png",
+  "Coconut.png": "https://stardewvalleywiki.com/mediawiki/images/2/2f/Coconut.png",
+  "Common Mushroom.png": "https://stardewvalleywiki.com/mediawiki/images/2/2e/Common_Mushroom.png",
+  "Copper Bar.png": "https://stardewvalleywiki.com/mediawiki/images/f/f1/Copper_Bar.png",
+  "Corn.png": "https://stardewvalleywiki.com/mediawiki/images/f/f8/Corn.png",
+  "Crab.png": "https://stardewvalleywiki.com/mediawiki/images/6/63/Crab.png",
+  "Crayfish.png": "https://stardewvalleywiki.com/mediawiki/images/5/53/Crayfish.png",
+  "Crocus.png": "https://stardewvalleywiki.com/mediawiki/images/2/2f/Crocus.png",
+  "Crystal Fruit.png": "https://stardewvalleywiki.com/mediawiki/images/1/16/Crystal_Fruit.png",
+  "Daffodil.png": "https://stardewvalleywiki.com/mediawiki/images/4/4b/Daffodil.png",
+  "Dandelion.png": "https://stardewvalleywiki.com/mediawiki/images/b/b1/Dandelion.png",
+  "Duck Egg.png": "https://stardewvalleywiki.com/mediawiki/images/3/31/Duck_Egg.png",
+  "Duck Feather.png": "https://stardewvalleywiki.com/mediawiki/images/f/f9/Duck_Feather.png",
+  "Earth Crystal.png": "https://stardewvalleywiki.com/mediawiki/images/7/74/Earth_Crystal.png",
+  "Eel.png": "https://stardewvalleywiki.com/mediawiki/images/9/91/Eel.png",
+  "Eggplant.png": "https://stardewvalleywiki.com/mediawiki/images/8/8f/Eggplant.png",
+  "Fiddlehead Fern.png": "https://stardewvalleywiki.com/mediawiki/images/4/48/Fiddlehead_Fern.png",
+  "Fire Quartz.png": "https://stardewvalleywiki.com/mediawiki/images/5/5b/Fire_Quartz.png",
+  "Fried Egg.png": "https://stardewvalleywiki.com/mediawiki/images/1/18/Fried_Egg.png",
+  "Frozen Geode.png": "https://stardewvalleywiki.com/mediawiki/images/b/bf/Frozen_Geode.png",
+  "Frozen Tear.png": "https://stardewvalleywiki.com/mediawiki/images/e/ec/Frozen_Tear.png",
+  "Ghostfish.png": "https://stardewvalleywiki.com/mediawiki/images/7/72/Ghostfish.png",
+  "Goat Cheese.png": "https://stardewvalleywiki.com/mediawiki/images/c/c8/Goat_Cheese.png",
+  "Gold Bar.png": "https://stardewvalleywiki.com/mediawiki/images/4/4e/Gold_Bar.png",
+  "Grape.png": "https://stardewvalleywiki.com/mediawiki/images/c/c2/Grape.png",
+  "Green Bean.png": "https://stardewvalleywiki.com/mediawiki/images/5/5c/Green_Bean.png",
+  "Hardwood.png": "https://stardewvalleywiki.com/mediawiki/images/e/ed/Hardwood.png",
+  "Hay.png": "https://stardewvalleywiki.com/mediawiki/images/a/aa/Hay.png",
+  "Hazelnut.png": "https://stardewvalleywiki.com/mediawiki/images/3/31/Hazelnut.png",
+  "Honey.png": "https://stardewvalleywiki.com/mediawiki/images/c/c6/Honey.png",
+  "Hot Pepper.png": "https://stardewvalleywiki.com/mediawiki/images/f/f1/Hot_Pepper.png",
+  "Iron Bar.png": "https://stardewvalleywiki.com/mediawiki/images/6/6c/Iron_Bar.png",
+  "Jelly.png": "https://stardewvalleywiki.com/mediawiki/images/0/05/Jelly.png",
+  "Large Brown Egg.png": "https://stardewvalleywiki.com/mediawiki/images/9/91/Large_Brown_Egg.png",
+  "Large Egg.png": "https://stardewvalleywiki.com/mediawiki/images/5/5d/Large_Egg.png",
+  "Large Goat Milk ES.png": "https://stardewvalleywiki.com/mediawiki/images/f/fa/Large_Goat_Milk_ES.png",
+  "Large Milk ES.png": "https://stardewvalleywiki.com/mediawiki/images/f/f3/Large_Milk_ES.png",
+  "Largemouth Bass.png": "https://stardewvalleywiki.com/mediawiki/images/1/11/Largemouth_Bass.png",
+  "Leek.png": "https://stardewvalleywiki.com/mediawiki/images/5/57/Leek.png",
+  "Lobster.png": "https://stardewvalleywiki.com/mediawiki/images/9/9f/Lobster.png",
+  "Maki Roll.png": "https://stardewvalleywiki.com/mediawiki/images/b/b6/Maki_Roll.png",
+  "Maple Syrup.png": "https://stardewvalleywiki.com/mediawiki/images/6/6a/Maple_Syrup.png",
+  "Melon.png": "https://stardewvalleywiki.com/mediawiki/images/1/19/Melon.png",
+  "Morel.png": "https://stardewvalleywiki.com/mediawiki/images/b/b1/Morel.png",
+  "Mussel.png": "https://stardewvalleywiki.com/mediawiki/images/a/aa/Mussel.png",
+  "Nautilus Shell.png": "https://stardewvalleywiki.com/mediawiki/images/a/a4/Nautilus_Shell.png",
+  "Oak Resin.png": "https://stardewvalleywiki.com/mediawiki/images/4/40/Oak_Resin.png",
+  "Orange.png": "https://stardewvalleywiki.com/mediawiki/images/4/43/Orange.png",
+  "Oyster.png": "https://stardewvalleywiki.com/mediawiki/images/5/54/Oyster.png",
+  "Parsnip.png": "https://stardewvalleywiki.com/mediawiki/images/d/db/Parsnip.png",
+  "Peach.png": "https://stardewvalleywiki.com/mediawiki/images/e/e2/Peach.png",
+  "Periwinkle.png": "https://stardewvalleywiki.com/mediawiki/images/1/1d/Periwinkle.png",
+  "Pine Tar.png": "https://stardewvalleywiki.com/mediawiki/images/c/ce/Pine_Tar.png",
+  "Pomegranate.png": "https://stardewvalleywiki.com/mediawiki/images/1/1b/Pomegranate.png",
+  "Poppy.png": "https://stardewvalleywiki.com/mediawiki/images/3/37/Poppy.png",
+  "Potato.png": "https://stardewvalleywiki.com/mediawiki/images/c/c2/Potato.png",
+  "Pufferfish.png": "https://stardewvalleywiki.com/mediawiki/images/b/ba/Pufferfish.png",
+  "Pumpkin.png": "https://stardewvalleywiki.com/mediawiki/images/6/64/Pumpkin.png",
+  "Purple Mushroom.png": "https://stardewvalleywiki.com/mediawiki/images/4/4b/Purple_Mushroom.png",
+  "Quartz.png": "https://stardewvalleywiki.com/mediawiki/images/c/cf/Quartz.png",
+  "Rabbit's Foot.png": "https://stardewvalleywiki.com/mediawiki/images/c/ca/Rabbit%27s_Foot.png",
+  "Red Cabbage.png": "https://stardewvalleywiki.com/mediawiki/images/2/2d/Red_Cabbage.png",
+  "Red Mushroom.png": "https://stardewvalleywiki.com/mediawiki/images/e/e1/Red_Mushroom.png",
+  "Red Snapper.png": "https://stardewvalleywiki.com/mediawiki/images/d/d3/Red_Snapper.png",
+  "Sandfish.png": "https://stardewvalleywiki.com/mediawiki/images/b/bb/Sandfish.png",
+  "Sardine.png": "https://stardewvalleywiki.com/mediawiki/images/0/04/Sardine.png",
+  "Sea Urchin.png": "https://stardewvalleywiki.com/mediawiki/images/e/e7/Sea_Urchin.png",
+  "Shad.png": "https://stardewvalleywiki.com/mediawiki/images/e/ef/Shad.png",
+  "Shrimp.png": "https://stardewvalleywiki.com/mediawiki/images/9/91/Shrimp.png",
+  "Slime.png": "https://stardewvalleywiki.com/mediawiki/images/3/38/Slime.png",
+  "Snail.png": "https://stardewvalleywiki.com/mediawiki/images/d/d2/Snail.png",
+  "Snow Yam.png": "https://stardewvalleywiki.com/mediawiki/images/3/3f/Snow_Yam.png",
+  "Solar Essence.png": "https://stardewvalleywiki.com/mediawiki/images/f/f4/Solar_Essence.png",
+  "Spice Berry.png": "https://stardewvalleywiki.com/mediawiki/images/c/c6/Spice_Berry.png",
+  "Stone.png": "https://stardewvalleywiki.com/mediawiki/images/d/d4/Stone.png",
+  "Sturgeon.png": "https://stardewvalleywiki.com/mediawiki/images/4/42/Sturgeon.png",
+  "Sunfish.png": "https://stardewvalleywiki.com/mediawiki/images/5/56/Sunfish.png",
+  "Sunflower.png": "https://stardewvalleywiki.com/mediawiki/images/8/81/Sunflower.png",
+  "Sweet Pea.png": "https://stardewvalleywiki.com/mediawiki/images/d/d9/Sweet_Pea.png",
+  "Tiger Trout.png": "https://stardewvalleywiki.com/mediawiki/images/0/01/Tiger_Trout.png",
+  "Tilapia.png": "https://stardewvalleywiki.com/mediawiki/images/7/73/Tilapia.png",
+  "Tomato.png": "https://stardewvalleywiki.com/mediawiki/images/9/9d/Tomato.png",
+  "Truffle Oil.png": "https://stardewvalleywiki.com/mediawiki/images/3/3d/Truffle_Oil.png",
+  "Truffle.png": "https://stardewvalleywiki.com/mediawiki/images/f/f2/Truffle.png",
+  "Tuna.png": "https://stardewvalleywiki.com/mediawiki/images/c/c5/Tuna.png",
+  "Void Essence.png": "https://stardewvalleywiki.com/mediawiki/images/1/1f/Void_Essence.png",
+  "Walleye.png": "https://stardewvalleywiki.com/mediawiki/images/0/05/Walleye.png",
+  "Wheat.png": "https://stardewvalleywiki.com/mediawiki/images/e/e2/Wheat.png",
+  "Wild Horseradish.png": "https://stardewvalleywiki.com/mediawiki/images/9/90/Wild_Horseradish.png",
+  "Wild Plum.png": "https://stardewvalleywiki.com/mediawiki/images/3/3b/Wild_Plum.png",
+  "Wine.png": "https://stardewvalleywiki.com/mediawiki/images/6/69/Wine.png",
+  "Winter Root.png": "https://stardewvalleywiki.com/mediawiki/images/1/11/Winter_Root.png",
+  "Wood.png": "https://stardewvalleywiki.com/mediawiki/images/d/df/Wood.png",
+  "Woodskip.png": "https://stardewvalleywiki.com/mediawiki/images/9/97/Woodskip.png",
+  "Wool.png": "https://stardewvalleywiki.com/mediawiki/images/3/34/Wool.png",
+  "Yam.png": "https://stardewvalleywiki.com/mediawiki/images/5/52/Yam.png",
+};
+const icon = f => ICON_MAP[f] || 'assets/placeholder.svg';
+function iconProxy(url){
+  return 'https://wsrv.nl/?url=' + encodeURIComponent(url) + '&w=96&h=96&fit=contain&output=png';
+}
+function fallbackIcon(img){
+  const original = img.dataset.originalSrc || img.src;
+  const stage = Number(img.dataset.fallbackStage || '0');
+  img.dataset.originalSrc = original;
+  if(stage === 0 && original && !original.includes('/assets/placeholder.svg')){
+    img.dataset.fallbackStage = '1';
+    img.referrerPolicy = 'no-referrer';
+    img.src = iconProxy(original);
+    return;
+  }
+  const alternate = original.replace('https://stardewvalleywiki.com/', 'https://pt.stardewvalleywiki.com/');
+  if(stage === 1 && alternate !== original){
+    img.dataset.fallbackStage = '2';
+    img.src = iconProxy(alternate);
+    return;
+  }
+  img.onerror = null;
+  img.dataset.fallbackStage = '3';
+  img.src = 'assets/placeholder.svg';
+}
+function iconHTML(file, name, cls='item-icon'){
+  const src=icon(file);
+  return `<img class="${cls}" src="${src}" alt="${name}" loading="lazy" decoding="async" referrerpolicy="no-referrer" data-original-src="${src}" onerror="fallbackIcon(this)">`;
+}
+
+const rooms = [
+ {id:'crafts',name:'Sala de Artesanato',reward:'Reparo da ponte para a Pedreira', bundles:[
+  {id:'spring-forage',title:'Recursos de Primavera',mode:'exact',season:'spring',items:[I('raiz','Raiz-forte','Wild Horseradish.png'),I('narciso','Narciso','Daffodil.png'),I('alho-poró','Alho-poró','Leek.png'),I('dente','Dente-de-leão','Dandelion.png')]},
+  {id:'summer-forage',title:'Recursos de Verão',mode:'exact',season:'summer',items:[I('uva','Uva','Grape.png'),I('baga-tempero','Café de Jardim','Spice Berry.png'),I('ervilha','Ervilha-de-cheiro','Sweet Pea.png')]},
+  {id:'fall-forage',title:'Recursos de Outono',mode:'exact',season:'fall',items:[I('cogumelo-comum','Cogumelo Comum','Common Mushroom.png'),I('ameixa','Ameixa Selvagem','Wild Plum.png'),I('avela','Avelã','Hazelnut.png'),I('amora','Amora','Blackberry.png')]},
+  {id:'winter-forage',title:'Recursos de Inverno',mode:'exact',season:'winter',items:[I('raiz-inverno','Raiz de Inverno','Winter Root.png'),I('fruta-cristal','Fruta de Cristal','Crystal Fruit.png'),I('inhame-neve','Inhame da Neve','Snow Yam.png'),I('acafrao','Flor de Açafrão','Crocus.png')]},
+  {id:'construction',title:'Construção',mode:'exact',items:[I('madeira','Madeira','Wood.png','99 × 2'),I('pedra','Pedra','Stone.png','99'),I('madeira-lei','Madeira de Lei','Hardwood.png','10')]},
+  {id:'exotic',title:'Recursos Exóticos',mode:'choice',need:5,items:[I('coco','Coco','Coconut.png'),I('cacto','Fruto do Cacto','Cactus Fruit.png'),I('cenoura','Cenoura Subterrânea','Cave Carrot.png'),I('cogumelo-vermelho','Cogumelo Vermelho','Red Mushroom.png'),I('cogumelo-roxo','Cogumelo Roxo','Purple Mushroom.png'),I('xarope-acer','Xarope de Ácer','Maple Syrup.png'),I('resina-carvalho','Resina de Carvalho','Oak Resin.png'),I('alcatrao','Alcatrão de Pinho','Pine Tar.png'),I('morel','Morel','Morel.png')]}
+ ]},
+ {id:'pantry',name:'Copa',reward:'Estufa',bundles:[
+  {id:'spring-crops',title:'Plantações de Primavera',mode:'exact',season:'spring',items:[I('chirivia','Chirívia','Parsnip.png'),I('vagem','Vagem','Green Bean.png'),I('couve-flor','Couve-flor','Cauliflower.png'),I('batata','Batata','Potato.png')]},
+  {id:'summer-crops',title:'Plantações de Verão',mode:'exact',season:'summer',items:[I('tomate','Tomate','Tomato.png'),I('pimenta','Pimenta Picante','Hot Pepper.png'),I('mirtilo','Mirtilo','Blueberry.png'),I('melao','Melão','Melon.png')]},
+  {id:'fall-crops',title:'Plantações de Outono',mode:'exact',season:'fall',items:[I('milho','Milho','Corn.png'),I('berinjela','Berinjela','Eggplant.png'),I('abobora','Abóbora','Pumpkin.png'),I('inhame','Inhame','Yam.png')]},
+  {id:'quality-crops',title:'Plantações de Qualidade',mode:'exact',items:[I('chirivia-ouro','Chirívia — Qualidade Ouro','Parsnip.png','5'),I('melao-ouro','Melão — Qualidade Ouro','Melon.png','5'),I('abobora-ouro','Abóbora — Qualidade Ouro','Pumpkin.png','5'),I('milho-ouro','Milho — Qualidade Ouro','Corn.png','5')]},
+  {id:'animal',title:'Animal',mode:'choice',need:5,items:[I('leite-grande','Leite Grande','Large Milk ES.png'),I('ovo-grande-marrom','Ovo Grande Marrom','Large Brown Egg.png'),I('ovo-grande','Ovo Grande','Large Egg.png'),I('leite-cabra','Leite Grande de Cabra','Large Goat Milk ES.png'),I('la','Lã','Wool.png'),I('ovo-pata','Ovo de Pata','Duck Egg.png')]},
+  {id:'artisan',title:'Artesão',mode:'choice',need:6,items:[I('oleo-trufas','Óleo de Trufas','Truffle Oil.png'),I('tecido','Tecido','Cloth.png'),I('queijo-cabra','Queijo de Cabra','Goat Cheese.png'),I('queijo','Queijo','Cheese.png'),I('mel','Mel','Honey.png'),I('geleia','Geléia','Jelly.png'),I('maca','Maçã','Apple.png'),I('damasco','Damasco','Apricot.png'),I('laranja','Laranja','Orange.png'),I('pessego','Pêssego','Peach.png'),I('roma','Romã','Pomegranate.png'),I('cereja','Cereja','Cherry.png')]}
+ ]},
+ {id:'fish',name:'Aquário',reward:'Remoção da pedra brilhante + Peneira de cobre',bundles:[
+  {id:'river',title:'Peixes de Rio',mode:'exact',items:[I('peixe-sol','Peixe-sol','Sunfish.png'),I('bagre','Bagre','Catfish.png'),I('alocine','Alocine','Shad.png'),I('salmao-hibrido','Salmão Híbrido','Tiger Trout.png')]},
+  {id:'lake',title:'Peixes de Lago',mode:'exact',items:[I('achiga','Achigã','Largemouth Bass.png'),I('carpa','Carpa','Carp.png'),I('peixe-gato-cabecudo','Peixe-gato-cabeçudo','Bullhead.png'),I('esturjao','Esturjão','Sturgeon.png')]},
+  {id:'ocean',title:'Peixes de Oceano',mode:'exact',items:[I('sardinha','Sardinha','Sardine.png'),I('atum','Atum','Tuna.png'),I('cioba','Cioba','Red Snapper.png'),I('tilapia','Tilápia','Tilapia.png')]},
+  {id:'night',title:'Pesca Noturna',mode:'exact',items:[I('picao-verde','Picão-verde','Walleye.png'),I('brema','Brema','Bream.png'),I('enguia','Enguia','Eel.png')]},
+  {id:'crab-pot',title:'Covo',mode:'choice',need:5,items:[I('lagosta','Lagosta','Lobster.png'),I('lagostim','Lagostim','Crayfish.png'),I('caranguejo','Caranguejo','Crab.png'),I('berbigao','Berbigão','Cockle.png'),I('mexilhao','Mexilhão','Mussel.png'),I('camarao','Camarão','Shrimp.png'),I('lesma','Lesma','Snail.png'),I('caramujo','Caramujo','Periwinkle.png'),I('ostra','Ostra','Oyster.png'),I('concha','Concha','Clam.png')]},
+  {id:'special-fish',title:'Peixes Especializados',mode:'exact',items:[I('baiacu','Baiacu','Pufferfish.png'),I('peixe-fantasma','Peixe-fantasma','Ghostfish.png'),I('areinha','Areinha','Sandfish.png'),I('madeirao','Madeirão','Woodskip.png')]}
+ ]},
+ {id:'boiler',name:'Sala da Caldeira',reward:'Carrinhos reparados',bundles:[
+  {id:'blacksmith',title:'Ferreiro',mode:'exact',items:[I('barra-cobre','Barra de Cobre','Copper Bar.png'),I('barra-ferro','Barra de Ferro','Iron Bar.png'),I('barra-ouro','Barra de Ouro','Gold Bar.png')]},
+  {id:'geologist',title:'Geólogo',mode:'exact',items:[I('quartzo','Quartzo','Quartz.png'),I('cristal-terra','Cristal de Terra','Earth Crystal.png'),I('lagrima','Lágrima Congelada','Frozen Tear.png'),I('quartzo-fogo','Quartzo de Fogo','Fire Quartz.png')]},
+  {id:'adventurer',title:'Aventureiro',mode:'choice',need:2,items:[I('gosma','Gosma','Slime.png','99'),I('asa-morcego','Asa de Morcego','Bat Wing.png','10'),I('essencia-solar','Essência Solar','Solar Essence.png'),I('essencia-nula','Essência Nula','Void Essence.png')]}
+ ]},
+ {id:'vault',name:'Cofre',reward:'Reparo do ônibus',bundles:[
+  {id:'gold-2500',title:'2.500 ouros',mode:'money',amount:2500},
+  {id:'gold-5000',title:'5.000 ouros',mode:'money',amount:5000},
+  {id:'gold-10000',title:'10.000 ouros',mode:'money',amount:10000},
+  {id:'gold-25000',title:'25.000 ouros',mode:'money',amount:25000}
+ ]},
+ {id:'bulletin',name:'Mural de Recados',reward:'Amizade +2 corações com aldeões não casáveis',bundles:[
+  {id:'chef',title:'Cozinheiro',mode:'exact',items:[I('xarope-acer','Xarope de Ácer','Maple Syrup.png'),I('broto-samambaia','Broto de Samambaia','Fiddlehead Fern.png'),I('trufa','Trufa','Truffle.png'),I('papoula','Papoula','Poppy.png'),I('hossomaki','Hossomaki','Maki Roll.png'),I('ovo-frito','Ovo Frito','Fried Egg.png')]},
+  {id:'dye',title:'Tinta',mode:'exact',items:[I('cogumelo-vermelho','Cogumelo Vermelho','Red Mushroom.png'),I('ourico','Ouriço-do-mar','Sea Urchin.png'),I('girassol','Girassol','Sunflower.png'),I('pena-pato','Pena de Pato','Duck Feather.png'),I('agua-marinha','Água-marinha','Aquamarine.png'),I('repolho-roxo','Repolho Roxo','Red Cabbage.png')]},
+  {id:'field',title:'Pesquisa de campo',mode:'exact',items:[I('cogumelo-roxo','Cogumelo Roxo','Purple Mushroom.png'),I('nautilo','Concha de Náutilo','Nautilus Shell.png'),I('esqualio','Esquálio','Chub.png'),I('geodo-congelado','Geodo Congelado','Frozen Geode.png')]},
+  {id:'fodder',title:'Forragem',mode:'exact',items:[I('trigo','Trigo','Wheat.png','10'),I('palha','Palha','Hay.png','10'),I('maca','Maçã','Apple.png','3')]},
+  {id:'enchanter',title:'Encantador',mode:'exact',items:[I('resina-carvalho','Resina de Carvalho','Oak Resin.png'),I('vinho','Vinho','Wine.png'),I('pe-coelho','Pé de Coelho',"Rabbit's Foot.png"),I('roma','Romã','Pomegranate.png')]}
+ ]}
+];
+function I(id,name,file,meta='1'){return {id,name,file,meta}};
+
+const state = {items:{}, gold:0, room:'all', pendingOnly:false, search:''};
+const KEY='stardew-cc-checklist-v1';
+let saved=localStorage.getItem(KEY); if(saved){try{Object.assign(state,JSON.parse(saved));}catch(e){}}
+const allBundles=rooms.flatMap(r=>r.bundles.map(b=>({...b,roomId:r.id,roomName:r.name})));
+const itemMap=new Map();
+for(const b of allBundles){for(const x of (b.items||[])){ if(!itemMap.has(x.id)) itemMap.set(x.id,{...x,uses:[]}); itemMap.get(x.id).uses.push({room:b.roomName,bundle:b.title,meta:x.meta}); }}
+const items=[...itemMap.values()].sort((a,b)=>a.name.localeCompare(b.name,'pt-BR'));
+
+function save(){localStorage.setItem(KEY,JSON.stringify({items:state.items,gold:Number(state.gold)||0,room:state.room,pendingOnly:state.pendingOnly,search:state.search}));}
+function isChecked(x){return !!state.items[x.id]}
+function qualifiedItems(b){return (b.items||[]).filter(isChecked).length}
+function isComplete(b){
+  if(b.mode==='money') return Number(state.gold||0)>=b.amount;
+  if(b.mode==='choice') return qualifiedItems(b)>=b.need;
+  return (b.items||[]).every(isChecked);
+}
+function bundleProgressText(b){
+  if(b.mode==='money') return `${Math.min(Number(state.gold||0),b.amount).toLocaleString('pt-BR')} / ${b.amount.toLocaleString('pt-BR')} ouros`;
+  const done=qualifiedItems(b); return b.mode==='choice' ? `${done}/${b.need} escolhas` : `${done}/${b.items.length} itens`;
+}
+function matches(text,q){return !q || text.toLocaleLowerCase('pt-BR').includes(q.toLocaleLowerCase('pt-BR'));}
+
+function renderRooms(){
+  const el=document.getElementById('rooms');
+  el.innerHTML=[{id:'all',name:'Todas as salas'},...rooms].map(r=>`<button class="room-btn ${state.room===r.id?'active':''}" data-room="${r.id}">${r.name}</button>`).join('');
+  el.querySelectorAll('[data-room]').forEach(b=>b.onclick=()=>{state.room=b.dataset.room;save();render();});
+}
+function reqHTML(x,b){const checked=isChecked(x); const meta=(x.meta&&x.meta!=='1')?x.meta:''; return `<label class="req ${checked?'checked':''}" data-item="${x.id}">
+  ${iconHTML(x.file, x.name)}
+  <div class="req-info"><div class="req-name">${x.name}</div><div class="req-meta">${meta||'1 item'}${b.mode==='choice'?'<span class="choice">opção</span>':''}</div></div>
+  <span class="checkmark">${checked?'✓':''}</span><input type="checkbox" ${checked?'checked':''} aria-label="Tenho ${x.name}">
+ </label>`}
+function bundleHTML(b){
+  const complete=isComplete(b); const q=state.search.trim();
+  if(q && !matches(b.title,q) && !(b.items||[]).some(x=>matches(x.name,q))) return '';
+  if(state.pendingOnly && complete) return '';
+  let body='';
+  if(b.mode==='money') body=`<div class="money-line">${Number(state.gold||0)>=b.amount?'✅ Valor já atingido':'💰 Ainda faltam '+Math.max(0,b.amount-Number(state.gold||0)).toLocaleString('pt-BR')+' ouros'}</div>`;
+  else body=`<div class="bundle-progress"><div class="progress"><i style="width:${Math.min(100,(b.mode==='choice'?qualifiedItems(b):b.items.filter(isChecked).length)/(b.mode==='choice'?b.need:b.items.length)*100)}%"></i></div></div><div class="req-grid">${b.items.map(x=>reqHTML(x,b)).join('')}</div>`;
+  const seasonClass=b.season?` season-${b.season}`:'';
+  return `<article class="bundle${seasonClass}"><div class="bundle-head"><div><div class="bundle-title">${b.title}</div><div class="bundle-rule">${b.mode==='choice'?`Escolha ${b.need} entre ${b.items.length}`:b.mode==='money'?'Pagamento em ouro':'Todos os itens do conjunto'}</div></div><span class="badge ${complete?'done':''}">${complete?'✓ Completo':bundleProgressText(b)}</span></div>${body}</article>`;
+}
+function renderAllItems(){
+  const q=state.search.trim();
+  const filtered=items.filter(x=>matches(x.name,q));
+  return `<section class="all-items"><div class="items-head"><div class="items-title">Todos os itens</div><div class="legend">Clique no cartão para marcar/desmarcar. A lista é única, mesmo quando um item aparece em mais de um conjunto.</div></div><div class="item-grid">${filtered.map(x=>{
+    const c=isChecked(x); const uses=x.uses.map(u=>`${u.bundle}${u.meta&&u.meta!=='1'?' · '+u.meta:''}`).join(' • ');
+    return `<div class="item-card ${c?'checked':''}" data-item="${x.id}"><div class="topline">${iconHTML(x.file, x.name)}<div class="name">${x.name}</div></div><div class="uses">${uses}</div><div class="tick"><span class="dot">${c?'✓':''}</span>${c?'Já possuo':'Marcar como possuído'}</div></div>`;
+  }).join('')}</div></section>`;
+}
+function render(){
+  document.getElementById('goldInput').value=state.gold||''; document.getElementById('search').value=state.search||''; document.getElementById('onlyPending').textContent=state.pendingOnly?'Mostrar tudo':'Mostrar pendentes';
+  renderRooms();
+  const visibleRooms=state.room==='all'?rooms:rooms.filter(r=>r.id===state.room);
+  let html=''; let bundleCount=0; let roomCount=0;
+  for(const r of visibleRooms){
+    const bs=r.bundles.filter(b=>{if(state.search&&!matches(r.name,state.search)&&!matches(b.title,state.search)&&!(b.items||[]).some(x=>matches(x.name,state.search)))return false; if(state.pendingOnly&&isComplete(b))return false; return true});
+    if(!bs.length) continue; html+=`<section class="room-section"><div class="room-heading"><div><div class="name">${r.name}</div><div class="reward">Recompensa da sala: ${r.reward}</div></div></div><div class="bundle-grid">${bs.map(bundleHTML).join('')}</div></section>`;
+  }
+  bundleCount=allBundles.filter(isComplete).length; roomCount=rooms.filter(r=>r.bundles.every(isComplete)).length;
+  const marked=items.filter(isChecked).length;
+  document.getElementById('viewNote').innerHTML=state.room==='all'?`Mostrando <b>${rooms.length} salas</b> e <b>${allBundles.length} conjuntos</b>.`:`Sala selecionada: <b>${rooms.find(r=>r.id===state.room)?.name||''}</b>.`;
+  document.getElementById('content').innerHTML=html || '<div class="empty">Nenhum resultado para os filtros atuais.</div>' + (state.room==='all'?renderAllItems():'');
+  if(state.room==='all') document.getElementById('content').innerHTML += renderAllItems();
+  document.getElementById('bundleStat').textContent=`${bundleCount}/30`; document.getElementById('itemStat').textContent=`${marked}/${items.length}`; document.getElementById('roomStat').textContent=`${roomCount}/6`;
+  document.getElementById('bundleBar').style.width=(bundleCount/30*100)+'%'; document.getElementById('itemBar').style.width=(marked/items.length*100)+'%'; document.getElementById('roomBar').style.width=(roomCount/6*100)+'%';
+  bindClicks();
+}
+function bindClicks(){
+  document.querySelectorAll('[data-item]').forEach(el=>el.onclick=(ev)=>{if(ev.target.tagName==='INPUT')return; const id=el.dataset.item; state.items[id]=!state.items[id]; save(); render();});
+}
+
+document.getElementById('search').addEventListener('input',e=>{state.search=e.target.value;save();render();});
+document.getElementById('goldInput').addEventListener('input',e=>{state.gold=Math.max(0,Number(e.target.value)||0);save();render();});
+document.getElementById('onlyPending').onclick=()=>{state.pendingOnly=!state.pendingOnly;save();render();};
+document.getElementById('resetBtn').onclick=()=>{if(confirm('Zerar todo o progresso salvo neste navegador?')){state.items={};state.gold=0;save();render();}};
+document.getElementById('exportBtn').onclick=()=>{const data=JSON.stringify({version:1,exportedAt:new Date().toISOString(),items:state.items,gold:state.gold},null,2); const blob=new Blob([data],{type:'application/json'}); const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='centro-comunitario-progresso.json';a.click();URL.revokeObjectURL(a.href);};
+document.getElementById('importInput').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);state.items=d.items||{};state.gold=Number(d.gold)||0;save();render();alert('Progresso importado.');}catch(err){alert('Arquivo inválido.');}};r.readAsText(f);e.target.value='';});
+render();
+</script>
+</body>
+</html>
