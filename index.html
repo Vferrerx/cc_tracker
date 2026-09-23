@@ -97,6 +97,23 @@
     88%{opacity:1}
     100%{transform:translateY(-108vh) translateX(var(--drift,0px));opacity:0}
   }
+  .fx-piece.firefly{
+    width:9px;height:9px;border-radius:50%;top:auto;
+    background:radial-gradient(circle, #fffbe0 0%, #ffe066 45%, rgba(255,224,102,0) 72%);
+    box-shadow:0 0 8px 3px rgba(255,224,102,.85), 0 0 18px 7px rgba(255,196,60,.4);
+    animation-timing-function:ease-in-out;
+  }
+  @keyframes fx-firefly{
+    0%{transform:translate(0,0) scale(.5);opacity:0}
+    10%{opacity:1}
+    25%{transform:translate(var(--dx1),var(--dy1)) scale(1)}
+    50%{transform:translate(var(--dx2),var(--dy2)) scale(.7)}
+    75%{transform:translate(var(--dx3),var(--dy3)) scale(1)}
+    92%{opacity:.9}
+    100%{transform:translate(var(--dx4),var(--dy4)) scale(.4);opacity:0}
+  }
+  .fx-summer-glow{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 32%, rgba(255,206,110,.32), transparent 62%);opacity:0;animation:fx-glow-pulse 1.8s ease-out forwards}
+  @keyframes fx-glow-pulse{0%{opacity:0}35%{opacity:1}100%{opacity:0}}
 
   /* ---------- Celebration ---------- */
   .celebrate-toast{position:fixed;top:16px;left:50%;transform:translate(-50%,-160%);z-index:60;background:linear-gradient(180deg,#fff3d2,#f0dcac);border:3px solid var(--gold-dark);border-radius:14px;padding:12px 22px;font-family:'Pixelify Sans',sans-serif;font-weight:600;font-size:15px;color:var(--wood-dark);box-shadow:var(--shadow);transition:transform .45s cubic-bezier(.34,1.56,.64,1);pointer-events:none;text-align:center;max-width:88vw}
@@ -152,13 +169,14 @@
   .bundle-progress{margin:12px 0}
   .req-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;position:relative}
   .req{
-    display:flex;align-items:center;gap:10px;min-width:0;
-    background:rgba(255,250,232,.85);border:2px solid #c69555;border-radius:12px;padding:8px;cursor:pointer;
+    display:flex;align-items:center;gap:6px;min-width:0;
+    background:rgba(255,250,232,.85);border:2px solid #c69555;border-radius:12px;padding:8px;
     transition:.12s transform,.12s background,.12s border-color,.12s box-shadow;
   }
   .req:hover{transform:translateY(-1px);border-color:#9a642e;box-shadow:0 4px 8px rgba(46,28,10,.14)}
   .req.checked{background:linear-gradient(180deg,#e3f2d3,#d3e8bb);border-color:var(--green-dark)}
   .req.dim{opacity:.6}
+  .req-main{display:flex;align-items:center;gap:10px;min-width:0;flex:1;cursor:pointer}
   .req img{width:44px;height:44px;image-rendering:pixelated;object-fit:contain;flex:0 0 44px;background:radial-gradient(circle at 35% 30%,#fce7ab,#eec776);border-radius:9px;border:1px solid #d3a45c;padding:4px;box-shadow:inset 0 1px 2px rgba(255,255,255,.6)}
   .req-info{min-width:0}.req-name{font-weight:800;font-size:12.5px;line-height:1.3}
   .req-meta{font-size:10.5px;color:var(--muted);margin-top:3px;line-height:1.35;font-weight:700}.req input{display:none}
@@ -247,6 +265,7 @@
     <div class="toolbar">
       <input id="search" class="search" type="search" placeholder="Pesquisar item ou conjunto…" />
       <button class="btn small" id="onlyPending">Mostrar pendentes</button>
+      <button class="btn small" id="soundToggle">🔊 Som</button>
       <button class="btn small primary" id="exportBtn">Exportar progresso</button>
       <label class="btn small" for="importInput">Importar</label><input id="importInput" type="file" accept="application/json" style="display:none" />
       <button class="btn small danger" id="resetBtn">Zerar</button>
@@ -609,7 +628,7 @@ const TIPS = {
   'pe-coelho':'Coelho com felicidade alta na coelheira produz Pé de Coelho (item raro).'
 };
 
-const state = {items:{}, gold:0, room:'all', pendingOnly:false, search:'', notes:{}, season:''};
+const state = {items:{}, gold:0, room:'all', pendingOnly:false, search:'', notes:{}, season:'', sound:true};
 const KEY='stardew-cc-checklist-v1';
 let saved=localStorage.getItem(KEY); if(saved){try{Object.assign(state,JSON.parse(saved));}catch(e){}}
 state.notes = state.notes || {};
@@ -618,7 +637,37 @@ const itemMap=new Map();
 for(const b of allBundles){for(const x of (b.items||[])){ if(!itemMap.has(x.id)) itemMap.set(x.id,{...x,uses:[]}); itemMap.get(x.id).uses.push({room:b.roomName,bundle:b.title,meta:x.meta}); }}
 const items=[...itemMap.values()].sort((a,b)=>a.name.localeCompare(b.name,'pt-BR'));
 
-function save(){localStorage.setItem(KEY,JSON.stringify({items:state.items,gold:Number(state.gold)||0,room:state.room,pendingOnly:state.pendingOnly,search:state.search,notes:state.notes||{},season:state.season||''}));}
+function save(){localStorage.setItem(KEY,JSON.stringify({items:state.items,gold:Number(state.gold)||0,room:state.room,pendingOnly:state.pendingOnly,search:state.search,notes:state.notes||{},season:state.season||'',sound:state.sound!==false}));}
+
+/* ---------- Sound (synthesized, chiptune-style — not original game audio) ---------- */
+let audioCtx=null;
+function getAudioCtx(){
+  if(!state.sound) return null;
+  try{
+    if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+    if(audioCtx.state==='suspended') audioCtx.resume();
+    return audioCtx;
+  }catch(e){ return null; }
+}
+function playBlip(freq,dur,type,vol){
+  const ctx=getAudioCtx(); if(!ctx) return;
+  try{
+    const osc=ctx.createOscillator(); const gain=ctx.createGain();
+    osc.type=type||'square'; osc.frequency.setValueAtTime(freq,ctx.currentTime);
+    gain.gain.setValueAtTime(vol||0.16,ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+(dur||0.09));
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.start(); osc.stop(ctx.currentTime+(dur||0.09));
+  }catch(e){}
+}
+function playCheckSound(nowChecked){
+  if(nowChecked){ playBlip(740,0.06,'square',0.15); setTimeout(()=>playBlip(1046,0.09,'square',0.13),50); }
+  else{ playBlip(392,0.09,'square',0.12); }
+}
+function playFanfare(big){
+  const notes=big?[523.25,659.25,783.99,1046.5,1318.5]:[659.25,987.77];
+  notes.forEach((f,i)=>setTimeout(()=>playBlip(f,0.17,'square',0.16),i*95));
+}
 function snapshotCompletion(){
   return {
     bundles: new Set(allBundles.filter(isComplete).map(b=>b.id)),
@@ -633,6 +682,7 @@ function celebrateDiff(before){
   newBundles.forEach(b=>celebrate(`✅ Conjunto completo: ${b.title}!`));
 }
 function celebrate(text){
+  playFanfare(text.includes('Sala'));
   const toast=document.getElementById('celebrateToast');
   document.getElementById('celebrateText').textContent=text;
   toast.classList.add('show');
@@ -652,13 +702,13 @@ function spawnConfetti(){
 }
 const SEASON_FX = {
   spring:{emojis:['🌸','🌷','🍃','🌼'], anim:'fx-fall', count:42, duration:[3.6,5.2], size:[14,22]},
-  summer:{emojis:['✨','🌼','🦋','☀️'], anim:'fx-float', count:30, duration:[3,4.6], size:[12,20]},
   fall:{emojis:['🍁','🍂','🍃'], anim:'fx-fall', count:44, duration:[3.6,5.6], size:[16,24]},
   winter:{emojis:['❄️','❅','❆'], anim:'fx-fall', count:56, duration:[3,4.6], size:[10,18]}
 };
 function playSeasonFx(season){
-  const cfg=SEASON_FX[season]; if(!cfg) return;
   const container=document.getElementById('seasonFx'); if(!container) return;
+  if(season==='summer'){ spawnFireflies(container); return; }
+  const cfg=SEASON_FX[season]; if(!cfg) return;
   const {emojis,anim,count,duration,size}=cfg;
   for(let i=0;i<count;i++){
     const el=document.createElement('span'); el.className='fx-piece';
@@ -673,6 +723,41 @@ function playSeasonFx(season){
     el.style.setProperty('--drift',drift);
     el.style.setProperty('--spin',spin);
     el.style.animation=`${anim} ${dur}s ${delay}s linear forwards`;
+    container.appendChild(el);
+    setTimeout(()=>el.remove(),(dur+delay+0.3)*1000);
+  }
+}
+function spawnFireflies(container){
+  const glow=document.createElement('div'); glow.className='fx-summer-glow';
+  container.appendChild(glow); setTimeout(()=>glow.remove(),1900);
+
+  const fireflyCount=28;
+  for(let i=0;i<fireflyCount;i++){
+    const el=document.createElement('span'); el.className='fx-piece firefly';
+    el.style.left=(Math.random()*100)+'vw';
+    el.style.top=(18+Math.random()*68)+'vh';
+    el.style.setProperty('--dx1',Math.round(Math.random()*80-40)+'px');
+    el.style.setProperty('--dy1',Math.round(Math.random()*60-50)+'px');
+    el.style.setProperty('--dx2',Math.round(Math.random()*90-45)+'px');
+    el.style.setProperty('--dy2',Math.round(Math.random()*70-55)+'px');
+    el.style.setProperty('--dx3',Math.round(Math.random()*80-40)+'px');
+    el.style.setProperty('--dy3',Math.round(Math.random()*60-50)+'px');
+    el.style.setProperty('--dx4',Math.round(Math.random()*70-35)+'px');
+    el.style.setProperty('--dy4',Math.round(Math.random()*80-70)+'px');
+    const dur=3.8+Math.random()*2.6, delay=Math.random()*0.9;
+    el.style.animation=`fx-firefly ${dur}s ${delay}s ease-in-out forwards`;
+    container.appendChild(el);
+    setTimeout(()=>el.remove(),(dur+delay+0.4)*1000);
+  }
+  const sparkles=['✨','🦋'];
+  for(let i=0;i<12;i++){
+    const el=document.createElement('span'); el.className='fx-piece';
+    el.textContent=sparkles[Math.floor(Math.random()*sparkles.length)];
+    const dur=3.4+Math.random()*2, delay=Math.random()*0.7;
+    el.style.left=(Math.random()*100)+'vw';
+    el.style.fontSize=(13+Math.random()*9)+'px';
+    el.style.setProperty('--drift',Math.round(Math.random()*140-70)+'px');
+    el.style.animation=`fx-float ${dur}s ${delay}s linear forwards`;
     container.appendChild(el);
     setTimeout(()=>el.remove(),(dur+delay+0.3)*1000);
   }
@@ -695,12 +780,14 @@ function renderRooms(){
   el.innerHTML=[{id:'all',name:'Todas as salas'},...rooms].map(r=>`<button class="room-btn ${state.room===r.id?'active':''}" data-room="${r.id}">${r.name}</button>`).join('');
   el.querySelectorAll('[data-room]').forEach(b=>b.onclick=()=>{state.room=b.dataset.room;save();render();});
 }
-function reqHTML(x,b){const checked=isChecked(x); const meta=(x.meta&&x.meta!=='1')?x.meta:''; const hasNote=!!(state.notes&&state.notes[x.id]); return `<label class="req ${checked?'checked':''}" data-item="${x.id}">
-  ${iconHTML(x.file, x.name)}
-  <div class="req-info"><div class="req-name">${x.name}</div><div class="req-meta">${meta||'1 item'}${b.mode==='choice'?'<span class="choice">opção</span>':''}</div></div>
+function reqHTML(x,b){const checked=isChecked(x); const meta=(x.meta&&x.meta!=='1')?x.meta:''; const hasNote=!!(state.notes&&state.notes[x.id]); return `<div class="req ${checked?'checked':''}" data-item="${x.id}">
+  <label class="req-main">
+   ${iconHTML(x.file, x.name)}
+   <div class="req-info"><div class="req-name">${x.name}</div><div class="req-meta">${meta||'1 item'}${b.mode==='choice'?'<span class="choice">opção</span>':''}</div></div>
+   <span class="checkmark">${checked?'✓':''}</span><input type="checkbox" ${checked?'checked':''} aria-label="Tenho ${x.name}">
+  </label>
   <button type="button" class="info-btn" data-tip-item="${x.id}" aria-label="Dica sobre ${x.name}">i</button>${hasNote?'<span class="note-dot" title="Tem nota"></span>':''}
-  <span class="checkmark">${checked?'✓':''}</span><input type="checkbox" ${checked?'checked':''} aria-label="Tenho ${x.name}">
- </label>`}
+ </div>`}
 function bundleHTML(b){
   const complete=isComplete(b); const q=state.search.trim();
   if(q && !matches(b.title,q) && !(b.items||[]).some(x=>matches(x.name,q))) return '';
@@ -732,6 +819,7 @@ function renderSeasonSwitch(){
 }
 function render(){
   document.getElementById('goldInput').value=state.gold||''; document.getElementById('search').value=state.search||''; document.getElementById('onlyPending').textContent=state.pendingOnly?'Mostrar tudo':'Mostrar pendentes';
+  document.getElementById('soundToggle').textContent=state.sound?'🔊 Som':'🔇 Som';
   renderSeasonSwitch();
   renderRooms();
   const visibleRooms=state.room==='all'?rooms:rooms.filter(r=>r.id===state.room);
@@ -752,13 +840,19 @@ function render(){
 function bindClicks(){
   document.querySelectorAll('[data-item]').forEach(el=>el.onclick=(ev)=>{
     if(ev.target.tagName==='INPUT'||ev.target.closest('.info-btn'))return;
+    closeTipSilent();
     const id=el.dataset.item;
     const before=snapshotCompletion();
     state.items[id]=!state.items[id]; save();
+    playCheckSound(state.items[id]);
     render();
     celebrateDiff(before);
   });
-  document.querySelectorAll('[data-tip-item]').forEach(btn=>btn.onclick=(ev)=>{ev.stopPropagation();ev.preventDefault();openTip(btn.dataset.tipItem,btn);});
+  document.querySelectorAll('[data-tip-item]').forEach(btn=>btn.onclick=(ev)=>{ev.stopPropagation();ev.stopImmediatePropagation();ev.preventDefault();openTip(btn.dataset.tipItem,btn);});
+}
+function closeTipSilent(){
+  const bubble=document.getElementById('tipBubble'); const overlay=document.getElementById('tipOverlay');
+  if(bubble) bubble.classList.remove('open'); if(overlay) overlay.classList.remove('open');
 }
 function openTip(id,btn){
   const x=itemMap.get(id); if(!x) return;
@@ -784,6 +878,7 @@ document.getElementById('tipClose').onclick=closeTip;
 document.getElementById('tipOverlay').onclick=closeTip;
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeTip();});
 
+document.getElementById('soundToggle').onclick=()=>{state.sound=!state.sound;save();render();if(state.sound)playBlip(740,0.07,'square',0.15);};
 document.getElementById('search').addEventListener('input',e=>{state.search=e.target.value;save();render();});
 document.getElementById('goldInput').addEventListener('input',e=>{
   const before=snapshotCompletion();
