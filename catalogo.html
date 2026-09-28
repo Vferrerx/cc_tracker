@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#4a7c3c" />
+<title>Catálogo — Stardew Valley Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;600;700&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-a:#f6e6b8; --bg-b:#ecd497;
+    --parchment:#fbf0d3; --parchment2:#f4e3ba;
+    --wood:#7a4a24; --wood-dark:#4e2d15; --wood-light:#c98a45;
+    --ink:#3d2814; --muted:#7c6042;
+    --gold:#e7b23c; --gold-dark:#b8811f;
+    --green:#4f9a4f; --green-dark:#356b34;
+    --shadow:0 10px 24px rgba(46,28,10,.22);
+    --shadow-sm:0 3px 0 rgba(46,28,10,.35);
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;color:var(--ink);font-family:'Nunito',sans-serif;min-height:100vh;
+    background:
+      radial-gradient(ellipse 900px 500px at 12% -10%, rgba(255,255,255,.5), transparent 55%),
+      radial-gradient(ellipse 700px 500px at 100% 0%, rgba(127,181,81,.18), transparent 55%),
+      repeating-linear-gradient(135deg, rgba(122,74,36,.05) 0 3px, transparent 3px 26px),
+      linear-gradient(180deg, var(--bg-a), var(--bg-b));
+  }
+  .app{max-width:1200px;margin:0 auto;padding:20px 22px 56px}
+  .home-link{display:inline-block;margin-bottom:10px;font-weight:800;font-size:12.5px;color:var(--wood-dark);text-decoration:none;background:linear-gradient(180deg,#fff3d2,#f0dcac);border:2px solid var(--wood-dark);border-radius:999px;padding:6px 13px;box-shadow:var(--shadow-sm)}
+  .signboard{
+    background:linear-gradient(180deg,#9a6636,#7a4a24 60%,#6b3f1f);
+    border:3px solid var(--wood-dark);border-radius:16px;padding:18px 22px;
+    box-shadow:var(--shadow), inset 0 0 0 3px rgba(255,224,158,.15);position:relative;
+  }
+  .signboard:before{content:"";position:absolute;inset:7px;border:1px solid rgba(255,224,158,.28);border-radius:10px;pointer-events:none}
+  .signboard .corner{position:absolute;width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f4d99b,#8c5b28 70%);box-shadow:inset 0 0 0 1px rgba(0,0,0,.35)}
+  .signboard .corner.tl{top:8px;left:8px}.signboard .corner.tr{top:8px;right:8px}.signboard .corner.bl{bottom:8px;left:8px}.signboard .corner.br{bottom:8px;right:8px}
+  .title{font-family:'Pixelify Sans',sans-serif;font-size:clamp(24px,4vw,38px);font-weight:700;margin:0;color:#fff3da;text-shadow:0 3px 0 rgba(0,0,0,.35)}
+  .subtitle{margin:8px 0 0;color:#f1dfb9;font-size:13.5px;max-width:680px;line-height:1.55;font-weight:600}
+
+  .tabs{display:flex;gap:8px;margin:16px 0 4px;flex-wrap:wrap}
+  .tab-btn{border:2px solid var(--wood-dark);background:linear-gradient(180deg,#ecd39c,#dcb875);padding:10px 18px;border-radius:999px;cursor:pointer;font-weight:800;font-size:13.5px;color:var(--wood-dark);box-shadow:var(--shadow-sm)}
+  .tab-btn.active{background:linear-gradient(180deg,#7fb551,#5a9645);color:#fff8e4;border-color:var(--green-dark)}
+  .stats{display:flex;gap:12px;flex-wrap:wrap;margin:14px 0}
+  .stat{background:linear-gradient(180deg,var(--parchment),var(--parchment2));border:2px solid var(--wood-light);border-radius:12px;padding:10px 16px;box-shadow:var(--shadow-sm);font-weight:800;font-size:12.5px}
+  .stat b{font-family:'Pixelify Sans',sans-serif;font-weight:600;font-size:16px;color:var(--wood-dark);margin-left:4px}
+
+  .section-title{font-family:'Pixelify Sans',sans-serif;font-weight:600;font-size:20px;color:var(--wood-dark);margin:26px 0 12px;border-bottom:3px solid var(--wood-light);padding-bottom:6px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+  .item-card{
+    background:linear-gradient(180deg,var(--parchment) 0%,var(--parchment2) 100%);
+    border:3px solid var(--wood);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);
+    cursor:pointer;position:relative;transition:.12s transform;
+  }
+  .item-card:hover{transform:translateY(-2px)}
+  .item-card.owned{border-color:var(--green-dark);background:linear-gradient(180deg,#e3f2d3,#d3e8bb)}
+  .item-head{display:flex;gap:11px;align-items:center}
+  .item-icon{width:46px;height:46px;object-fit:contain;image-rendering:pixelated;background:radial-gradient(circle at 35% 30%,#fce7ab,#eec776);border:1px solid #d3a45c;border-radius:9px;padding:4px;flex:0 0 46px}
+  .item-name{font-family:'Pixelify Sans',sans-serif;font-weight:600;font-size:15.5px;color:var(--wood-dark);line-height:1.2}
+  .item-sub{font-size:10.5px;color:var(--muted);font-weight:700;margin-top:2px}
+  .owned-badge{position:absolute;top:-9px;right:10px;background:linear-gradient(180deg,#bfe4ae,#9bd18a);border:2px solid var(--green-dark);border-radius:999px;padding:2px 9px;font-size:9.5px;font-weight:900;color:var(--green-dark);display:none}
+  .item-card.owned .owned-badge{display:block}
+  .item-desc{font-size:11.5px;color:var(--ink);font-weight:700;margin-top:9px;line-height:1.45}
+  .item-price{margin-top:10px;font-weight:900;font-size:14px;color:var(--gold-dark);display:flex;align-items:center;gap:5px}
+  .materials{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+  .mat{display:flex;align-items:center;gap:4px;background:rgba(255,250,232,.85);border:1px solid #c69555;border-radius:8px;padding:3px 7px 3px 3px;font-size:10.5px;font-weight:800}
+  .mat img{width:18px;height:18px;object-fit:contain;image-rendering:pixelated}
+  .req-building{margin-top:8px;font-size:10.5px;font-weight:800;color:var(--wood-dark);background:rgba(231,178,60,.25);display:inline-block;padding:3px 9px;border-radius:999px}
+  .click-hint{margin-top:10px;font-size:10px;font-weight:800;color:var(--muted);text-align:right}
+  .disclaimer{margin:24px 0 4px;font-size:11px;color:var(--muted);line-height:1.6;font-weight:600;background:rgba(255,250,232,.6);border:1px dashed #ba9159;border-radius:12px;padding:12px 15px}
+  .footer{margin:26px 0 4px;color:var(--muted);font-size:11.5px;line-height:1.6;text-align:center;font-weight:600}
+  @media (max-width:560px){.app{padding:14px}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <a href="index.html" class="home-link">← Início</a>
+  <div class="signboard">
+    <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+    <h1 class="title">🔨🐔 Catálogo de Compra / Evolução</h1>
+    <p class="subtitle">Construções e evoluções vendidas por Robin (Carpintaria) e animais vendidos por Marnie (Rancho): preços, itens necessários e imagens. Clique em um item para marcar como já construído/comprado.</p>
+  </div>
+
+  <div class="tabs" id="tabs">
+    <button type="button" class="tab-btn" data-tab="buildings">🔨 Construções (Robin)</button>
+    <button type="button" class="tab-btn" data-tab="animals">🐔 Animais (Marnie)</button>
+  </div>
+  <div class="stats" id="stats"></div>
+
+  <div id="content"></div>
+
+  <div class="disclaimer">
+    💰 Preços e materiais conferidos na Stardew Valley Wiki (versão 1.6). Alguns valores de material (ex. madeira/pedra na loja da Robin) aumentam a partir do Ano 2 — os preços aqui são os de construção das estruturas, que não mudam com o ano. A Cabra, o Carneiro e o Porco exigem o celeiro no nível correspondente (Celeiro Grande/Celeiro de Luxo) já construído antes da compra.
+  </div>
+  <div class="footer">Ícones dos itens e construções hospedados pela Stardew Valley Wiki — é necessário internet para eles carregarem. O progresso ("já tenho/construí") fica salvo neste navegador.</div>
+</div>
+<script>
+const ICON_MAP = {
+  'Coop.png':'https://stardewvalleywiki.com/mediawiki/images/4/48/Coop.png',
+  'Big_Coop.png':'https://stardewvalleywiki.com/mediawiki/images/d/d5/Big_Coop.png',
+  'Deluxe_Coop.png':'https://stardewvalleywiki.com/mediawiki/images/5/51/Deluxe_Coop.png',
+  'Barn.png':'https://stardewvalleywiki.com/mediawiki/images/f/f8/Barn.png',
+  'Big_Barn.png':'https://stardewvalleywiki.com/mediawiki/images/8/81/Big_Barn.png',
+  'Deluxe_Barn.png':'https://stardewvalleywiki.com/mediawiki/images/3/3d/Deluxe_Barn.png',
+  'Silo.png':'https://stardewvalleywiki.com/mediawiki/images/5/5f/Silo.png',
+  'Well.png':'https://stardewvalleywiki.com/mediawiki/images/4/41/Well.png',
+  'Mill.png':'https://stardewvalleywiki.com/mediawiki/images/9/90/Mill.png',
+  'Shed.png':'https://stardewvalleywiki.com/mediawiki/images/1/15/Shed.png',
+  'Big_Shed.png':'https://stardewvalleywiki.com/mediawiki/images/d/d0/Big_Shed.png',
+  'Horse_Stable.png':'https://stardewvalleywiki.com/mediawiki/images/2/24/Horse_Stable.png',
+  'Fish_Pond.png':'https://stardewvalleywiki.com/mediawiki/images/6/65/Fish_Pond.png',
+  'Slime_Hutch.png':'https://stardewvalleywiki.com/mediawiki/images/2/22/Slime_Hutch.png',
+  'White_Chicken.png':'https://stardewvalleywiki.com/mediawiki/images/2/22/White_Chicken.png',
+  'White_Cow.png':'https://stardewvalleywiki.com/mediawiki/images/3/36/White_Cow.png',
+  'Duck.png':'https://stardewvalleywiki.com/mediawiki/images/3/38/Duck.png',
+  'Goat.png':'https://stardewvalleywiki.com/mediawiki/images/5/52/Goat.png',
+  'Sheep.png':'https://stardewvalleywiki.com/mediawiki/images/c/cc/Sheep.png',
+  'Rabbit.png':'https://stardewvalleywiki.com/mediawiki/images/f/fd/Rabbit.png',
+  'Pig.png':'https://stardewvalleywiki.com/mediawiki/images/3/30/Pig.png',
+  'Wood.png':'https://stardewvalleywiki.com/mediawiki/images/d/df/Wood.png',
+  'Stone.png':'https://stardewvalleywiki.com/mediawiki/images/d/d4/Stone.png',
+  'Clay.png':'https://stardewvalleywiki.com/mediawiki/images/a/a2/Clay.png',
+  'Copper_Bar.png':'https://stardewvalleywiki.com/mediawiki/images/f/f1/Copper_Bar.png',
+  'Cloth.png':'https://stardewvalleywiki.com/mediawiki/images/5/51/Cloth.png',
+  'Hardwood.png':'https://stardewvalleywiki.com/mediawiki/images/e/ed/Hardwood.png',
+  'Iron_Bar.png':'https://stardewvalleywiki.com/mediawiki/images/6/6c/Iron_Bar.png',
+  'Refined_Quartz.png':'https://stardewvalleywiki.com/mediawiki/images/9/98/Refined_Quartz.png',
+  'Iridium_Bar.png':'https://stardewvalleywiki.com/mediawiki/images/c/c4/Iridium_Bar.png',
+  'Seaweed.png':'https://stardewvalleywiki.com/mediawiki/images/1/13/Seaweed.png',
+  'Green_Algae.png':'https://stardewvalleywiki.com/mediawiki/images/6/6d/Green_Algae.png',
+};
+function iconProxy(url){return 'https://wsrv.nl/?url=' + encodeURIComponent(url) + '&w=96&h=96&fit=contain&output=png';}
+function fallbackIcon(img){
+  const original = img.dataset.originalSrc || img.src;
+  const stage = Number(img.dataset.fallbackStage || '0');
+  img.dataset.originalSrc = original;
+  if(stage === 0 && original){ img.dataset.fallbackStage='1'; img.referrerPolicy='no-referrer'; img.src=iconProxy(original); return; }
+  const alternate = original.replace('https://stardewvalleywiki.com/', 'https://pt.stardewvalleywiki.com/');
+  if(stage === 1 && alternate !== original){ img.dataset.fallbackStage='2'; img.src=iconProxy(alternate); return; }
+  img.onerror=null; img.src='assets/placeholder.svg';
+}
+function iconHTML(file, name, cls){
+  const src = ICON_MAP[file] || 'assets/placeholder.svg';
+  return `<img class="${cls||'item-icon'}" src="${src}" alt="${name}" loading="lazy" decoding="async" referrerpolicy="no-referrer" data-original-src="${src}" onerror="fallbackIcon(this)">`;
+}
+function mat(file,name,qty){return {file,name,qty}}
+
+const BUILDINGS = [
+ {group:'Galinheiro (Coop)', items:[
+   {id:'coop', name:'Galinheiro (Coop)', icon:'Coop.png', gold:4000, materials:[mat('Wood.png','Madeira',300),mat('Stone.png','Pedra',100)], desc:'Abriga até 4 animais de galinheiro. Libera a compra de Galinhas.'},
+   {id:'big-coop', name:'Galinheiro Grande (Big Coop)', icon:'Big_Coop.png', gold:10000, materials:[mat('Wood.png','Madeira',400),mat('Stone.png','Pedra',150)], desc:'Upgrade do Galinheiro. Abriga até 8 animais e ganha uma Incubadora. Libera Patos.'},
+   {id:'deluxe-coop', name:'Galinheiro de Luxo (Deluxe Coop)', icon:'Deluxe_Coop.png', gold:20000, materials:[mat('Wood.png','Madeira',500),mat('Stone.png','Pedra',200)], desc:'Upgrade final. Abriga até 12 animais e ganha alimentação automática. Libera Coelhos.'},
+ ]},
+ {group:'Celeiro (Barn)', items:[
+   {id:'barn', name:'Celeiro (Barn)', icon:'Barn.png', gold:6000, materials:[mat('Wood.png','Madeira',350),mat('Stone.png','Pedra',150)], desc:'Abriga até 4 animais de celeiro. Libera a compra de Vacas.'},
+   {id:'big-barn', name:'Celeiro Grande (Big Barn)', icon:'Big_Barn.png', gold:12000, materials:[mat('Wood.png','Madeira',450),mat('Stone.png','Pedra',200)], desc:'Upgrade do Celeiro. Abriga até 8 animais e libera reprodução (crias). Libera Cabras.'},
+   {id:'deluxe-barn', name:'Celeiro de Luxo (Deluxe Barn)', icon:'Deluxe_Barn.png', gold:25000, materials:[mat('Wood.png','Madeira',550),mat('Stone.png','Pedra',300)], desc:'Upgrade final. Abriga até 12 animais e ganha alimentação automática. Libera Carneiros e Porcos.'},
+ ]},
+ {group:'Construções independentes', items:[
+   {id:'silo', name:'Silo', icon:'Silo.png', gold:100, materials:[mat('Stone.png','Pedra',100),mat('Clay.png','Argila',10),mat('Copper_Bar.png','Barra de Cobre',5)], desc:'Armazena até 240 de feno cortado na fazenda, usado para alimentar os animais.'},
+   {id:'well', name:'Poço (Well)', icon:'Well.png', gold:1000, materials:[mat('Stone.png','Pedra',75)], desc:'Permite encher o regador em qualquer lugar da fazenda, sem precisar ir até a água.'},
+   {id:'mill', name:'Moinho (Mill)', icon:'Mill.png', gold:2500, materials:[mat('Stone.png','Pedra',50),mat('Wood.png','Madeira',150),mat('Cloth.png','Tecido',4)], desc:'Transforma Trigo em Farinha, Beterraba em Açúcar e Arroz não moído em Arroz.'},
+   {id:'shed', name:'Galpão (Shed)', icon:'Shed.png', gold:15000, materials:[mat('Wood.png','Madeira',300)], desc:'Um espaço interno vazio para decorar, guardar baús ou montar uma linha de produção.'},
+   {id:'big-shed', name:'Galpão Grande (Big Shed)', icon:'Big_Shed.png', gold:20000, materials:[mat('Wood.png','Madeira',550),mat('Stone.png','Pedra',300)], desc:'Upgrade do Galpão: dobra o tamanho do interior.'},
+   {id:'stable', name:'Estábulo (Stable)', icon:'Horse_Stable.png', gold:10000, materials:[mat('Hardwood.png','Madeira de Lei',100),mat('Iron_Bar.png','Barra de Ferro',5)], desc:'Já vem com um cavalo incluso, para se locomover mais rápido pelo vale.'},
+   {id:'fish-pond', name:'Tanque de Peixes (Fish Pond)', icon:'Fish_Pond.png', gold:5000, materials:[mat('Stone.png','Pedra',200),mat('Seaweed.png','Alga Marinha',5),mat('Green_Algae.png','Alga Verde',5)], desc:'Cria peixes que se multiplicam e produzem itens (geralmente Ovas) com o tempo.'},
+   {id:'slime-hutch', name:'Casa de Gosmas (Slime Hutch)', icon:'Slime_Hutch.png', gold:10000, materials:[mat('Stone.png','Pedra',500),mat('Refined_Quartz.png','Quartzo Refinado',10),mat('Iridium_Bar.png','Barra de Irídio',1)], desc:'Permite criar até 20 gosmas, que produzem Bolas de Gosma quando os bebedouros estão cheios.'},
+ ]},
+ {group:'Melhorias da Casa (Farmhouse)', items:[
+   {id:'house-1', name:'1ª Melhoria — Cozinha', emoji:'🍳', gold:10000, materials:[mat('Wood.png','Madeira',450)], desc:'Adiciona cozinha (para cozinhar) e um quarto, com cama de casal. Libera casamento.'},
+   {id:'house-2', name:'2ª Melhoria — Quartos', emoji:'🚪', gold:65000, materials:[mat('Hardwood.png','Madeira de Lei',100)], desc:'Adiciona dois cômodos novos (incluindo berçário), permitindo ter filhos. Libera reformas.'},
+   {id:'house-3', name:'3ª Melhoria — Porão (Cellar)', emoji:'🛢️', gold:100000, materials:[], desc:'Adiciona um porão com barris (Casks) para envelhecer queijo e vinho e aumentar seu valor.'},
+ ]},
+];
+
+const ANIMALS = [
+ {group:'Galinheiro (Coop)', items:[
+   {id:'chicken', name:'Galinha (Chicken)', icon:'White_Chicken.png', gold:800, building:'Galinheiro', desc:'Adultas bem cuidadas põem ovos todos os dias.'},
+   {id:'duck', name:'Pato (Duck)', icon:'Duck.png', gold:1200, building:'Galinheiro Grande', desc:'Adultos felizes põem ovos de pato a cada dois dias.'},
+   {id:'rabbit', name:'Coelho (Rabbit)', icon:'Rabbit.png', gold:8000, building:'Galinheiro de Luxo', desc:'Produzem Lã de vez em quando (item raro: Pé de Coelho).'},
+ ]},
+ {group:'Celeiro (Barn)', items:[
+   {id:'cow', name:'Vaca (Cow)', icon:'White_Cow.png', gold:1500, building:'Celeiro', desc:'Adultas podem ser ordenhadas diariamente (precisa do Balde de Leite).'},
+   {id:'goat', name:'Cabra (Goat)', icon:'Goat.png', gold:4000, building:'Celeiro Grande', desc:'Adultas felizes produzem leite de cabra a cada dois dias.'},
+   {id:'sheep', name:'Carneiro (Sheep)', icon:'Sheep.png', gold:8000, building:'Celeiro de Luxo', desc:'Podem ser tosquiados para obter lã (precisa da Tesoura de Tosquiar).'},
+   {id:'pig', name:'Porco (Pig)', icon:'Pig.png', gold:16000, building:'Celeiro de Luxo', desc:'Treinados para encontrar trufas no chão do lado de fora do celeiro.'},
+ ]},
+];
+
+function bundleGold(g){return '💰 ' + g.toLocaleString('pt-BR') + 'g'}
+function materialsHTML(materials){
+  if(!materials || !materials.length) return '';
+  return `<div class="materials">${materials.map(m=>`<span class="mat">${iconHTML(m.file,m.name,'')}${m.qty} ${m.name}</span>`).join('')}</div>`;
+}
+function buildingCardHTML(it){
+  const owned = isOwned(it.id);
+  const icon = it.icon ? iconHTML(it.icon, it.name) : `<div class="item-icon" style="display:grid;place-items:center;font-size:22px">${it.emoji||'🏠'}</div>`;
+  return `<div class="item-card ${owned?'owned':''}" data-id="${it.id}">
+    <span class="owned-badge">✓ Construído</span>
+    <div class="item-head">${icon}<div><div class="item-name">${it.name}</div></div></div>
+    <div class="item-price">${bundleGold(it.gold)}</div>
+    ${materialsHTML(it.materials)}
+    <div class="item-desc">${it.desc}</div>
+    <div class="click-hint">${owned?'Clique para desmarcar':'Clique para marcar como construído'}</div>
+  </div>`;
+}
+function animalCardHTML(it){
+  const owned = isOwned(it.id);
+  return `<div class="item-card ${owned?'owned':''}" data-id="${it.id}">
+    <span class="owned-badge">✓ Comprado</span>
+    <div class="item-head">${iconHTML(it.icon,it.name)}<div><div class="item-name">${it.name}</div></div></div>
+    <div class="item-price">${bundleGold(it.gold)}</div>
+    <div class="req-building">Requer: ${it.building}</div>
+    <div class="item-desc">${it.desc}</div>
+    <div class="click-hint">${owned?'Clique para desmarcar':'Clique para marcar como comprado'}</div>
+  </div>`;
+}
+
+const KEY='stardew-catalog-v1';
+let state = {owned:{}, tab:'buildings'};
+let saved = localStorage.getItem(KEY); if(saved){try{Object.assign(state, JSON.parse(saved));}catch(e){}}
+function save(){localStorage.setItem(KEY, JSON.stringify(state));}
+function isOwned(id){return !!state.owned[id]}
+function allItemIds(list){return list.flatMap(g=>g.items.map(it=>it.id))}
+
+function render(){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===state.tab));
+  const list = state.tab==='buildings' ? BUILDINGS : ANIMALS;
+  const cardFn = state.tab==='buildings' ? buildingCardHTML : animalCardHTML;
+  const allIds = allItemIds(list);
+  const ownedCount = allIds.filter(isOwned).length;
+  document.getElementById('stats').innerHTML = `<div class="stat">${state.tab==='buildings'?'Construções':'Animais'}: <b>${ownedCount}/${allIds.length}</b></div>`;
+  document.getElementById('content').innerHTML = list.map(g=>`
+    <div class="section-title">${g.group}</div>
+    <div class="grid">${g.items.map(cardFn).join('')}</div>
+  `).join('');
+  document.querySelectorAll('[data-id]').forEach(el=>el.onclick=()=>{
+    const id = el.dataset.id; state.owned[id] = !state.owned[id]; save(); render();
+  });
+}
+document.querySelectorAll('.tab-btn').forEach(b=>b.onclick=()=>{state.tab=b.dataset.tab; save(); render();});
+render();
+</script>
+</body>
+</html>
