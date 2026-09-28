@@ -25,9 +25,8 @@ O progresso fica salvo automaticamente no seu navegador (`localStorage`), então
 
 1. Baixe ou clone este repositório
 2. Abra o arquivo `index.html` diretamente no navegador (duplo clique já funciona)
-3. Clique nos itens para marcar o que você já possui
-4. Use a busca e os filtros de cômodo para navegar mais rápido
-5. Exporte seu progresso de vez em quando como backup
+3. Ou Abra via link online: https://cctracker-kappa.vercel.app/index.html
+4. Exporte seu progresso de vez em quando como backup
 
 Não é necessário nenhum servidor, build ou instalação — é uma página estática.
 
